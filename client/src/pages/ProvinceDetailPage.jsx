@@ -39,7 +39,7 @@ function ProvinceDetailPage() {
         return <div className="text-center text-gray-500 py-20">Provincia non trovata.</div>;
     }
 
-    const pageTitle = `Guida alla Provincia di ${province.name} (${province.sigla}) | InfoSubito`;
+    const pageTitle = `Guida alla Provincia di ${province.name} (${province.sigla}) | ComuniAmo`;
     const metaDescription = `Esplora i comuni e le attrazioni della provincia di ${province.name}. Informazioni utili, cosa vedere e servizi per organizzare la tua visita.`;
 
     return (

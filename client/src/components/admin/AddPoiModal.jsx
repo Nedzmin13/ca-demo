@@ -3,8 +3,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { createPoi } from '../../api';
 import RichTextEditor from './forms/RichTextEditor';
+import OpeningHoursInput from './forms/OpeningHoursInput';
 
-const categories = ["Restaurant", "FuelStation", "Supermarket", "Bar", "Parking", "TouristAttraction", "EmergencyService", "Accommodation"];
+
+const categories = ["Restaurant", "FuelStation", "Supermarket", "Bar", "Parking", "TouristAttraction", "EmergencyService", "Accommodation", "CarRepairShop"];
 
 const SpecificFields = ({ category, register, watch }) => {
     const hasLeafletChecked = watch('hasLeaflet');
@@ -13,29 +15,20 @@ const SpecificFields = ({ category, register, watch }) => {
             return ( <> <div><label>Tipo Cucina</label><input {...register('cuisineType')} className="w-full border p-2 rounded mt-1"/></div> <div><label>Fascia Prezzo</label><input {...register('priceRange')} className="w-full border p-2 rounded mt-1"/></div> </> );
         case 'FuelStation':
             return (<>
-                <div><label>Prezzo Diesel</label><input type="number" step="0.001" {...register('dieselPrice')} /></div>
-                <div><label>Prezzo Benzina</label><input type="number" step="0.001" {...register('petrolPrice')} />
-                </div>
-                <div><label>Prezzo Gas (GPL/Metano)</label><input type="number"
-                                                                  step="0.001" {...register('gasPrice')} /></div>
-                <div>
-                    <label>Sito Web (opzionale)</label>
-                    <input {...register('website')} className="w-full border p-2 rounded mt-1"/>
-                </div>
-
+                <div><label>Prezzo Diesel</label><input type="number" step="0.001" {...register('dieselPrice')} className="w-full border p-2 rounded mt-1"/></div>
+                <div><label>Prezzo Benzina</label><input type="number" step="0.001" {...register('petrolPrice')} className="w-full border p-2 rounded mt-1"/></div>
+                <div><label>Prezzo Gas (GPL/Metano)</label><input type="number" step="0.001" {...register('gasPrice')} className="w-full border p-2 rounded mt-1"/></div>
+                <div><label>Sito Web (opzionale)</label><input {...register('website')} className="w-full border p-2 rounded mt-1"/></div>
             </>);
         case 'Supermarket':
             return (
                 <>
-                    <label className="flex items-center gap-2"><input
-                        type="checkbox" {...register('hasLeaflet')} /> Volantino attivo</label>
+                    <label className="flex items-center gap-2"><input type="checkbox" {...register('hasLeaflet')} /> Volantino attivo</label>
                     {hasLeafletChecked && (<>
-                        <div><label>Titolo Volantino</label><input {...register('leafletTitle')}
-                                                                   className="w-full border p-2 rounded mt-1"/></div>
+                        <div><label>Titolo Volantino</label><input {...register('leafletTitle')} className="w-full border p-2 rounded mt-1"/></div>
                         <div><label>URL Volantino</label><input {...register('pdfUrl')} className="w-full border p-2 rounded mt-1"/></div> </> )}
                 </>
             );
-
         case 'Parking':
             return ( <> <div><label>Tipo Parcheggio</label><input {...register('parkingType')} className="w-full border p-2 rounded mt-1"/></div> </> );
         case 'Bar':
@@ -44,7 +37,7 @@ const SpecificFields = ({ category, register, watch }) => {
             return (
                 <>
                     <div><label>Tipo di Alloggio *</label>
-                        <select {...register('type', { required: true })} className="w-full ...">
+                        <select {...register('type', { required: true })} className="w-full border p-2 rounded mt-1">
                             <option value="">Seleziona...</option>
                             <option value="Hotel">Hotel</option>
                             <option value="B&B">B&B</option>
@@ -53,11 +46,42 @@ const SpecificFields = ({ category, register, watch }) => {
                             <option value="Altro">Altro</option>
                         </select>
                     </div>
-                    <div><label>Stelle (1-5)</label><input type="number" {...register('stars')} /></div>
-                    <div><label>Servizi</label><input {...register('services')} /></div>
-                    <div><label>Link Prenotazione</label><input type="url" {...register('bookingUrl')} /></div>
+                    <div><label>Stelle (1-5)</label><input type="number" min="1" max="5" {...register('stars')} className="w-full border p-2 rounded mt-1"/></div>
+                    <div><label>Servizi</label><input {...register('services')} className="w-full border p-2 rounded mt-1"/></div>
+                    <div><label>Link Prenotazione</label><input type="url" {...register('bookingUrl')} className="w-full border p-2 rounded mt-1"/></div>
                 </>
             );
+
+        case 'CarRepairShop':
+            return (
+                <>
+                    <div>
+                        <label>Servizi Offerti</label>
+                        <input {...register('servicesOffered')} placeholder="Es. Gommista, Elettrauto, Revisioni..." className="w-full border p-2 rounded mt-1"/>
+                    </div>
+                    <div>
+                        <label>Marche Trattate</label>
+                        <input {...register('brandsTreated')} placeholder="Es. Fiat, Ford, Multimarca..." className="w-full border p-2 rounded mt-1"/>
+                    </div>
+                </>
+            );
+        case 'EmergencyService':
+            return (
+                <div>
+                    <label>Tipo Servizio *</label>
+                    <select
+                        {...register('serviceType', { required: "Questo campo è obbligatorio" })}
+                        className="w-full border p-2 rounded mt-1"
+                    >
+                        <option value="">Seleziona un tipo...</option>
+                        <option value="Farmacia">Farmacia</option>
+                        <option value="Guardia Medica">Guardia Medica</option>
+                        <option value="Ambulatorio">Ambulatorio</option>
+                        <option value="Ospedale">Ospedale</option>
+                    </select>
+                </div>
+            );
+
         default:
             return null;
     }
@@ -70,10 +94,12 @@ function AddPoiModal({ comuneId, onClose, onPoiAdded }) {
         const formData = new FormData();
         Object.keys(data).forEach(key => {
             if (key === 'images') {
-                if (data.images.length > 0) {
+                if (data.images && data.images.length > 0) {
                     for (let i = 0; i < data.images.length; i++) formData.append('images', data.images[i]);
                 }
-            } else { formData.append(key, data[key]); }
+            } else if (data[key] !== null && data[key] !== undefined) {
+                formData.append(key, data[key]);
+            }
         });
         formData.append('comuneId', comuneId);
         try {
@@ -94,7 +120,15 @@ function AddPoiModal({ comuneId, onClose, onPoiAdded }) {
                     <div><label>Nome *</label><input {...register('name', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
                     <div><label>Indirizzo *</label><input {...register('address', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
                     <div><label>Categoria *</label><select {...register('category', { required: true })} className="w-full border p-2 rounded mt-1"><option value="">Seleziona...</option>{categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}</select></div>
-                    <div><label>Orari di Apertura</label><input {...register('openingHours')} className="w-full border p-2 rounded mt-1"/></div>
+                    <div>
+                        <label className="font-semibold block mb-2">Orari di Apertura</label>
+                        <Controller
+                            name="openingHours"
+                            control={control}
+                            defaultValue="{}" // Inizia con un oggetto vuoto in formato stringa
+                            render={({field}) => <OpeningHoursInput value={field.value} onChange={field.onChange}/>}
+                        />
+                    </div>
                     <div>
                         <label className="font-semibold block mb-2">Descrizione</label>
                         <Controller
@@ -104,8 +138,7 @@ function AddPoiModal({ comuneId, onClose, onPoiAdded }) {
                             render={({field}) => <RichTextEditor value={field.value} onChange={field.onChange}/>}
                         />
                     </div>
-                    <div><label>Sito Web</label><input {...register('website')}
-                                                       className="w-full border p-2 rounded mt-1"/></div>
+                    <div><label>Sito Web</label><input {...register('website')} className="w-full border p-2 rounded mt-1"/></div>
                     <div><label>Telefono</label><input {...register('phoneNumber')} className="w-full border p-2 rounded mt-1"/></div>
                     <hr />
                     {selectedCategory && <h3 className="font-bold text-lg">Dettagli per: {selectedCategory}</h3>}

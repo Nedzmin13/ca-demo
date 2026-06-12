@@ -1,225 +1,316 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useForm, Controller } from 'react-hook-form';
-import {
-    fetchDestinationsForAdmin,
-    createDestination,
-    updateDestination,
-    deleteDestination,
-    addImagesToDestination,
-    deleteDestinationImage
-} from '../../api';
-import { Edit, Trash2, X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetchDestinationsForAdmin, createDestination, updateDestination, deleteDestination, deleteDestinationImage, updateDestinationImage } from '../../api';
+import { PlusCircle, Edit, Trash2, X, Save, ChevronLeft, ChevronRight } from 'lucide-react';
 import RichTextEditor from '../../components/admin/forms/RichTextEditor';
-
-const seasons = ["Primavera", "Estate", "Autunno", "Inverno"];
 
 function AdminDestinationsPage() {
     const [destinations, setDestinations] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [editing, setEditing] = useState(null);
-    const { register, handleSubmit, reset, setValue, control, formState: { isSubmitting } } = useForm();
-    const [currentImages, setCurrentImages] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingDest, setEditingDest] = useState(null);
 
-    const [pagination, setPagination] = useState(null);
+    // Stati per Paginazione
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const loadData = async () => {
+    // Stati per Attribuzione Immagini
+    const [editingImageId, setEditingImageId] = useState(null);
+    const [attributionText, setAttributionText] = useState('');
+
+    const [formData, setFormData] = useState({
+        name: '', region: '', description: '', tags: '', season: 'Estate', rating: '5.0', images: [],
+        isFeaturedHome: false,
+        isFeaturedTravel: false
+    });
+
+    const loadDestinations = async (pageToLoad = 1) => {
         setLoading(true);
         try {
-            const response = await fetchDestinationsForAdmin({ page: currentPage, limit: 15 });
+            const response = await fetchDestinationsForAdmin({ page: pageToLoad, limit: 15 });
             setDestinations(response.data.data);
-            setPagination(response.data.pagination);
-        } catch (error) {
-            console.error("Errore nel caricare le destinazioni:", error);
-            alert("Impossibile caricare i dati.");
-        } finally {
-            setLoading(false);
+            setCurrentPage(response.data.pagination.page);
+            setTotalPages(response.data.pagination.totalPages);
+        } catch (error) { console.error(error); } finally { setLoading(false); }
+    };
+
+    useEffect(() => { loadDestinations(currentPage); }, [currentPage]);
+
+    const handleChange = (e) => {
+        if (e.target.name === 'images') {
+            setFormData({ ...formData, images: e.target.files });
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
         }
     };
 
-    useEffect(() => {
-        loadData();
-    }, [currentPage]);
+    const handleDescriptionChange = (content) => {
+        setFormData({ ...formData, description: content });
+    };
 
-    useEffect(() => {
-        if (editing) {
-            Object.keys(editing).forEach(key => setValue(key, editing[key]));
-            setCurrentImages(editing.images || []);
+    const openModal = (dest = null) => {
+        if (dest) {
+            setEditingDest(dest);
+            setFormData({
+                name: dest.name, region: dest.region, description: dest.description || '',
+                tags: dest.tags || '', season: dest.season, rating: dest.rating, images: [],
+                isFeaturedHome: dest.isFeaturedHome || false,
+                isFeaturedTravel: dest.isFeaturedTravel || false
+            });
         } else {
-            reset();
-            setCurrentImages([]);
+            setEditingDest(null);
+            setFormData({ name: '', region: '', description: '', tags: '', season: 'Estate', rating: '5.0', images: [], isFeaturedHome: false });
         }
-    }, [editing, setValue, reset]);
+        setIsModalOpen(true);
+    };
 
-    const onSubmit = async (data) => {
-        const formData = new FormData();
-        // Aggiunge tutti i dati (testo e file) al FormData
-        Object.keys(data).forEach(key => {
-            if (key === 'newImages') {
-                if (data.newImages.length > 0) {
-                    for (let i = 0; i < data.newImages.length; i++) {
-                        formData.append('newImages', data.newImages[i]);
-                    }
-                }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = new FormData();
+        Object.keys(formData).forEach(key => {
+            if (key === 'images') {
+                for (let i = 0; i < formData.images.length; i++) data.append('images', formData.images[i]);
             } else {
-                formData.append(key, data[key]);
+                data.append(key, formData[key]);
             }
         });
 
         try {
-            if (editing) {
-                await updateDestination(editing.id, formData);
-            } else {
-                // La creazione richiede il campo 'images' e non 'newImages'
-                // Per semplicità, la lasciamo così com'è per ora, funzionerà
-                await createDestination(formData);
-            }
-            reset();
-            setEditing(null);
-            loadData();
-        } catch (error) {
-            console.error("Errore durante il salvataggio:", error);
-            alert("Errore durante il salvataggio.");
-        }
+            if (editingDest) await updateDestination(editingDest.id, data);
+            else await createDestination(data);
+            setIsModalOpen(false);
+            loadDestinations(currentPage);
+        } catch (error) { alert("Errore durante il salvataggio."); }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Sei sicuro di voler eliminare questa destinazione?")) {
-            try {
-                await deleteDestination(id);
-                loadData();
-            } catch (e) {
-                console.error("Errore nell'eliminazione:", e);
-                alert("Errore durante l'eliminazione.");
-            }
+        if (window.confirm("Eliminare questa destinazione?")) {
+            try { await deleteDestination(id); loadDestinations(currentPage); } catch (error) { alert("Errore."); }
         }
     };
 
     const handleDeleteImage = async (imageId) => {
-        if (window.confirm("Sei sicuro di voler eliminare questa immagine?")) {
+        if (window.confirm("Eliminare l'immagine?")) {
             try {
                 await deleteDestinationImage(imageId);
-                setCurrentImages(prev => prev.filter(img => img.id !== imageId));
-            } catch (error) {
-                console.error("Errore eliminazione immagine:", error);
-                alert("Impossibile eliminare l'immagine.");
-            }
+                setEditingDest(prev => ({...prev, images: prev.images.filter(img => img.id !== imageId)}));
+                loadDestinations(currentPage);
+            } catch (error) { alert("Errore."); }
         }
     };
 
-    const handlePrevPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
+    const handleEditAttribution = (image) => {
+        setEditingImageId(image.id);
+        setAttributionText(image.attribution || '');
     };
 
-    const handleNextPage = () => {
-        if (pagination && currentPage < pagination.totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
+    const handleSaveAttribution = async (imageId) => {
+        try {
+            await updateDestinationImage(imageId, { attribution: attributionText });
+            setEditingDest(prev => ({
+                ...prev,
+                images: prev.images.map(img => img.id === imageId ? { ...img, attribution: attributionText } : img)
+            }));
+            setEditingImageId(null);
+            loadDestinations(currentPage);
+        } catch (error) { alert("Errore salvataggio attribuzione."); }
     };
 
     return (
         <>
-            <Helmet><title>Gestione Destinazioni - Admin</title></Helmet>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Colonna Form */}
-                <div className="lg:col-span-1">
-                    <div className="bg-white p-6 rounded-lg shadow-md sticky top-8">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-2xl font-bold mb-4">{editing ? 'Modifica Destinazione' : 'Aggiungi Destinazione'}</h2>
-                            {editing && <button onClick={() => setEditing(null)} className="text-sm flex items-center gap-1 text-gray-600 hover:text-black"><X size={14}/> Annulla</button>}
-                        </div>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
-                            <div><label className="text-sm font-medium">Nome *</label><input {...register('name', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
-                            <div><label className="text-sm font-medium">Regione *</label><input {...register('region', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
-                            <div><label className="text-sm font-medium">Stagione *</label><select {...register('season', { required: true })} className="w-full border p-2 rounded mt-1"><option value="">Seleziona...</option>{seasons.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
-                            <div><label className="text-sm font-medium">Rating (da 0.0 a 5.0) *</label><input type="number" step="0.1" min="0" max="5" {...register('rating', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
-                            <div><label className="text-sm font-medium">Tags (separati da virgola)</label><input {...register('tags')} className="w-full border p-2 rounded mt-1"/></div>
-                            <div>
-                                <label className="font-semibold block mb-2">Descrizione</label>
-                                <Controller
-                                    name="description"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({field}) => <RichTextEditor value={field.value}
-                                                                         onChange={field.onChange}/>}
-                                />
-                            </div>
-                            <hr/>
-                            <h3 className="font-semibold text-gray-800 pt-2">Immagini</h3>
-                            {editing && currentImages.length > 0 && (
-                                <div className="grid grid-cols-3 gap-2">
-                                    {currentImages.map(img => (
-                                        <div key={img.id} className="relative group">
-                                            <img src={img.url} alt="Anteprima" className="w-full h-16 object-cover rounded"/>
-                                            <button type="button" onClick={() => handleDeleteImage(img.id)} className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"><X size={12}/></button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                            <div>
-                                <label className="text-sm font-medium">{editing ? 'Aggiungi Nuove Immagini' : 'Carica Immagini'}</label>
-                                <input
-                                    type="file"
-                                    {...register(editing ? 'newImages' : 'images')}
-                                    multiple
-                                    className="w-full text-sm mt-1"
-                                /></div>
-                            {!editing && (
-                                <div>
-                                    <label className="text-sm font-medium">Oppure inserisci URL (uno per riga)</label>
-                                    <textarea {...register('imageUrls')} rows="2" placeholder="https://esempio.com/immagine1.jpg
-https://esempio.com/immagine2.png" className="w-full border p-2 rounded mt-1 text-sm"></textarea>
-                                </div>
-                            )}
-
-                            <button type="submit" disabled={isSubmitting} className={`w-full text-white py-2.5 rounded-lg font-semibold transition-colors disabled:bg-gray-400 ${editing ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-500 hover:bg-green-600'}`}>
-                                {isSubmitting ? 'Salvataggio...' : (editing ? 'Salva Modifiche' : 'Aggiungi Destinazione')}
-                            </button>
-                        </form>
-                    </div>
+            <Helmet><title>Gestione Destinazioni</title></Helmet>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold">Destinazioni</h1>
+                    <button onClick={() => openModal()} className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2">
+                        <PlusCircle size={18} /> Aggiungi
+                    </button>
                 </div>
-                {/* Colonna Lista */}
-                <div className="lg:col-span-2">
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <h2 className="text-2xl font-bold mb-4">Destinazioni Esistenti ({destinations.length})</h2>
-                        <div className="space-y-4">
-                            {loading ? <p>Caricamento...</p> : destinations.map(dest => (
-                                <div key={dest.id} className="border p-4 rounded-lg flex justify-between items-center hover:bg-gray-50">
-                                    <div className="flex items-center gap-4">
-                                        <img src={dest.images && dest.images[0] ? dest.images[0].url : 'https://via.placeholder.com/80x64/e2e8f0/94a3b8?text=N/A'} alt={dest.name} className="w-20 h-16 object-cover rounded flex-shrink-0"/>
-                                        <div>
-                                            <p className="font-bold">{dest.name} <span className="font-normal text-gray-500">- {dest.region}</span></p>
-                                            <p className="text-sm text-yellow-500 font-semibold flex items-center gap-1"><Star size={14} className="fill-current"/> {dest.rating}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3 flex-shrink-0">
-                                        <button onClick={() => setEditing(dest)} className="text-blue-500 hover:text-blue-700"><Edit/></button>
-                                        <button onClick={() => handleDelete(dest.id)} className="text-red-500 hover:text-red-700"><Trash2/></button>
-                                    </div>
-                                </div>
-                            ))}
-                            {!loading && destinations.length === 0 && <p className="text-center text-gray-500 py-8">Nessuna destinazione presente.</p>}
-                        </div>
 
-                        {pagination && pagination.totalPages > 1 && (
-                            <div className="flex justify-between items-center mt-6">
-                                <button onClick={handlePrevPage} disabled={currentPage === 1 || loading} className="flex items-center ...">
-                                    <ChevronLeft size={16} /> Precedente
-                                </button>
-                                <span className="text-sm text-gray-700">
-                                    Pagina <strong>{currentPage}</strong> di <strong>{pagination.totalPages}</strong>
-                                </span>
-                                <button onClick={handleNextPage} disabled={currentPage === pagination.totalPages || loading} className="flex items-center ...">
-                                    Successiva <ChevronRight size={16} />
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                        <thead className="bg-gray-50 text-xs uppercase">
+                        <tr>
+                            <th className="px-6 py-3">Nome</th>
+                            <th className="px-6 py-3">Regione</th>
+                            <th className="px-6 py-3">Stagione</th>
+                            <th className="px-6 py-3">Rating</th>
+                            <th className="px-6 py-3">Azioni</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loading ? <tr><td colSpan="5" className="p-4 text-center">Caricamento...</td></tr> :
+                            destinations.map(dest => (
+                                <tr key={dest.id} className="border-b">
+                                    <td className="px-6 py-4 font-bold">
+                                        {dest.name}
+                                        {dest.isFeaturedHome && <span className="ml-2 text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full">IN HOME</span>}
+                                    </td>
+                                    <td className="px-6 py-4">{dest.region}</td>
+                                    <td className="px-6 py-4">{dest.season}</td>
+                                    <td className="px-6 py-4">{dest.rating}</td>
+                                    <td className="px-6 py-4 flex gap-2">
+                                        <button onClick={() => openModal(dest)} className="text-blue-600"><Edit size={18}/></button>
+                                        <button onClick={() => handleDelete(dest.id)} className="text-red-600"><Trash2 size={18}/></button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="mt-6 flex justify-between items-center border-t pt-4 text-sm text-gray-600">
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        className="flex items-center gap-1 text-blue-600 hover:bg-blue-50 px-3 py-1 rounded disabled:text-gray-300 disabled:hover:bg-transparent"
+                    >
+                        <ChevronLeft size={16} /> Precedente
+                    </button>
+
+                    <span>Pagina <strong>{currentPage}</strong> di <strong>{totalPages}</strong></span>
+
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={currentPage === totalPages}
+                        className="flex items-center gap-1 text-blue-600 hover:bg-blue-50 px-3 py-1 rounded disabled:text-gray-300 disabled:hover:bg-transparent"
+                    >
+                        Successiva <ChevronRight size={16} />
+                    </button>
                 </div>
             </div>
+
+            {/* MODALE AGGIUNTA/MODIFICA */}
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                        <div className="p-4 border-b flex justify-between">
+                            <h2 className="text-xl font-bold">{editingDest ? 'Modifica' : 'Nuova'} Destinazione</h2>
+                            <button onClick={() => setIsModalOpen(false)}><X /></button>
+                        </div>
+
+                        <div className="p-6 overflow-y-auto flex flex-col lg:flex-row gap-8">
+
+                            {/* FORM DATI */}
+                            <form id="destForm" onSubmit={handleSubmit} className="flex-1 space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div><label>Nome *</label><input name="name" value={formData.name}
+                                                                     onChange={handleChange} required
+                                                                     className="w-full border p-2 rounded"/></div>
+                                    <div><label>Regione *</label><input name="region" value={formData.region}
+                                                                        onChange={handleChange} required
+                                                                        className="w-full border p-2 rounded"/></div>
+                                    <div>
+                                        <label>Stagione *</label>
+                                        <select name="season" value={formData.season} onChange={handleChange}
+                                                className="w-full border p-2 rounded">
+                                            <option value="Primavera">Primavera</option>
+                                            <option value="Estate">Estate</option>
+                                            <option value="Autunno">Autunno</option>
+                                            <option value="Inverno">Inverno</option>
+                                            <option value="Tutto l'anno">Tutto l'anno</option>
+                                        </select>
+                                    </div>
+                                    <div><label>Voto (1-5) *</label><input type="number" step="0.1" name="rating"
+                                                                           value={formData.rating}
+                                                                           onChange={handleChange} required
+                                                                           className="w-full border p-2 rounded"/></div>
+                                </div>
+                                <div><label>Tags</label><input name="tags" value={formData.tags} onChange={handleChange}
+                                                               className="w-full border p-2 rounded"
+                                                               placeholder="Es. Mare, Natura..."/></div>
+
+                                {/* ▼▼▼ CHECKBOX INSERITO QUI ▼▼▼ */}
+                                <div>
+                                    <label
+                                        className="flex items-center gap-2 cursor-pointer bg-sky-50 p-3 rounded-lg border border-sky-100">
+                                        <input
+                                            type="checkbox"
+                                            name="isFeaturedHome"
+                                            checked={formData.isFeaturedHome}
+                                            onChange={(e) => setFormData({
+                                                ...formData,
+                                                isFeaturedHome: e.target.checked
+                                            })}
+                                            className="w-5 h-5 text-sky-600 rounded focus:ring-sky-500"
+                                        />
+                                        <span
+                                            className="font-bold text-sky-800">Mostra in Homepage (Top Destinazioni)</span>
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label
+                                        className="flex items-center gap-2 cursor-pointer bg-emerald-50 p-3 rounded-lg border border-emerald-100 mt-2">
+                                        <input
+                                            type="checkbox"
+                                            name="isFeaturedTravel"
+                                            checked={formData.isFeaturedTravel}
+                                            onChange={(e) => setFormData({
+                                                ...formData,
+                                                isFeaturedTravel: e.target.checked
+                                            })}
+                                            className="w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500"
+                                        />
+                                        <span className="font-bold text-emerald-800">Mostra in Pagina Viaggi</span>
+                                    </label>
+                                </div>
+                                {/* ▲▲▲ FINE INSERIMENTO ▲▲▲ */}
+
+                                <div>
+                                    <label className="font-semibold block mb-2">Descrizione</label>
+                                    <RichTextEditor value={formData.description} onChange={handleDescriptionChange}/>
+                                </div>
+
+                                <div>
+                                    <label className="font-semibold block mb-2">Carica Immagini (Nuove)</label>
+                                    <input type="file" name="images" multiple onChange={handleChange}
+                                           className="w-full border p-2 rounded"/>
+                                </div>
+                            </form>
+
+                            {/* GESTIONE IMMAGINI CON ATTRIBUZIONE */}
+                            {editingDest && (
+                                <div
+                                    className="w-full lg:w-1/3 border-t lg:border-t-0 lg:border-l pt-6 lg:pt-0 lg:pl-6">
+                                    <h3 className="font-bold mb-4">Immagini Caricate</h3>
+                                    <div className="space-y-4">
+                                        {editingDest.images?.map(img => (
+                                            <div key={img.id}
+                                                 className="border p-2 rounded bg-gray-50 flex flex-col gap-2">
+                                                <img src={img.url} className="w-full h-32 object-cover rounded"/>
+
+                                                {editingImageId === img.id ? (
+                                                    <div className="flex flex-col gap-2 mt-2">
+                                                    <textarea value={attributionText} onChange={(e) => setAttributionText(e.target.value)} className="w-full border p-1 rounded text-xs" rows="2" placeholder="Es. Autore: Mario | Unsplash" />
+                                                        <div className="flex justify-end gap-2">
+                                                            <button onClick={() => setEditingImageId(null)} className="text-gray-500 hover:bg-gray-200 p-1 rounded"><X size={14}/></button>
+                                                            <button onClick={() => handleSaveAttribution(img.id)} className="text-green-600 hover:bg-green-200 p-1 rounded"><Save size={14}/></button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex justify-between items-start mt-2">
+                                                        <p className="text-xs text-gray-500 italic truncate" title={img.attribution}>{img.attribution || 'Nessuna attribuzione'}</p>
+                                                        <div className="flex gap-1 flex-shrink-0">
+                                                            <button onClick={() => handleEditAttribution(img)} className="text-blue-600 p-1 hover:bg-blue-100 rounded"><Edit size={14}/></button>
+                                                            <button onClick={() => handleDeleteImage(img.id)} className="text-red-600 p-1 hover:bg-red-100 rounded"><Trash2 size={14}/></button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="p-4 border-t flex justify-end gap-4 bg-gray-50 rounded-b-lg flex-shrink-0">
+                            <button type="button" onClick={() => setIsModalOpen(false)} className="bg-gray-200 px-4 py-2 rounded font-semibold text-gray-700">Annulla</button>
+                            <button type="submit" form="destForm" className="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700">Salva Destinazione</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

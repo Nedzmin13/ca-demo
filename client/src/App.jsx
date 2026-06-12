@@ -63,13 +63,27 @@ import ChiSiamoPage from "./pages/ChiSiamoPage.jsx";
 import FaqPage from "./pages/FaqPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ItinerariesByRegionPage from "./pages/ItinerariesByRegionPage.jsx";
+import AdminSupermarketsPage from "./pages/admin/AdminSupermarketsPage.jsx";
+import AdminSupermarketDetailPage from "./pages/admin/AdminSupermarketDetailPage.jsx";
+import AdminChainsListPage from "./pages/admin/AdminChainsListPage.jsx";
+import AdminChainDetailPage from "./pages/admin/AdminChainDetailPage.jsx";
+import AdminBulkImportPage from "./pages/admin/AdminBulkImportPage.jsx";
+import AdminRestaurantDashboard from "./pages/admin/restaurant/AdminRestaurantDashboard.jsx";
+import AdminSinglePoiListPage from "./pages/admin/restaurant/AdminSinglePoiListPage.jsx";
+import AdminMedicalDashboard from "./pages/admin/medical/AdminMedicalDashboard.jsx";
+
+import ScrollToTop from "./components/ScrollToTop";
+
+
 
 
 const Placeholder = ({ title }) => <div className="text-center p-20 text-3xl font-bold">{title}</div>;
 
 function App() {
     return (
-        <Routes>
+        <>
+            <ScrollToTop />
+            <Routes>
             {/* --- ROTTE PUBBLICHE --- */}
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<HomePage />} />
@@ -143,9 +157,26 @@ function App() {
                     <Route path="howto/category/:categoryId" element={<AdminHowToArticlesListPage />} />
                     <Route path="howto/category/:categoryId/nuovo" element={<AdminHowToArticleEditPage />} />
                     <Route path="howto/modifica/:articleId" element={<AdminHowToArticleEditPage />} />
+                    <Route path="supermercati" element={<AdminSupermarketsPage />} />
+                    <Route path="supermercati/:brandId" element={<AdminSupermarketDetailPage />} />
+                    <Route path="brands/:type" element={<AdminChainsListPage />} />
+                    <Route path="brands/:type/:id" element={<AdminChainDetailPage />} />
+                    <Route path="import-massivo" element={<AdminBulkImportPage />} />
+                    <Route path="ristorazione" element={<AdminRestaurantDashboard />} />
+                    <Route path="ristoranti-list" element={<AdminSinglePoiListPage category="Restaurant" title="Ristoranti Singoli" />} />
+                    <Route path="bar-list" element={<AdminSinglePoiListPage category="Bar" title="Bar & Caffetterie" />} />
+                    <Route path="sanita" element={<AdminMedicalDashboard />} />
+
+                    // LISTE SANITÀ FILTRATE
+                    // Nota: category è sempre "EmergencyService", ma cambia il subType
+                    <Route path="sanita-list/Ospedale" element={<AdminSinglePoiListPage category="EmergencyService" subType="Ospedale" title="Ospedali" />} />
+                    <Route path="sanita-list/Farmacia" element={<AdminSinglePoiListPage category="EmergencyService" subType="Farmacia" title="Farmacie" />} />
+                    <Route path="sanita-list/Guardia Medica" element={<AdminSinglePoiListPage category="EmergencyService" subType="Guardia Medica" title="Guardia Medica" />} />
+                    <Route path="sanita-list/Ambulatorio" element={<AdminSinglePoiListPage category="EmergencyService" subType="Ambulatorio" title="Ambulatori" />} />
                 </Route>
             </Route>
         </Routes>
+        </>
     );
 }
 

@@ -6,7 +6,9 @@ import {
     updatePoi,
     deletePoi,
     addImagesToPoi,
-    deleteImage
+    deleteImage,
+    importGlobalPois,
+    getPoisByCategoryAdmin
 } from '../controllers/poiController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -27,6 +29,9 @@ router.route('/').post(protect, upload.array('images'), createPoi);
 // GET /api/pois/:id/details (per la modifica)
 router.route('/:id/details').get(protect, getPoiDetailsById);
 
+router.route('/admin/category').get(protect, getPoisByCategoryAdmin);
+
+
 // PUT e DELETE /api/pois/:id
 router.route('/:id')
     .put(protect, updatePoi)
@@ -39,5 +44,10 @@ router.route('/:id/images')
 // DELETE /api/pois/images/:imageId
 router.route('/images/:imageId')
     .delete(protect, deleteImage);
+
+router.route('/import-global')
+    .post(protect, upload.single('file'), importGlobalPois);
+
+
 
 export default router;

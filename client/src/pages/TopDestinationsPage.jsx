@@ -61,7 +61,7 @@ function TopDestinationsPage() {
     return (
         <>
             <Helmet>
-                <title>Top Destinazioni in Italia per Stagione | InfoSubito</title>
+                <title>Top Destinazioni in Italia per Stagione | ComuniAmo</title>
                 <meta name="description" content="Scopri le migliori destinazioni italiane per ogni stagione. Trova idee e ispirazione per il tuo prossimo viaggio in primavera, estate, autunno o inverno." />
                 <meta property="og:title" content="Top Destinazioni in Italia per Stagione" />
             </Helmet>

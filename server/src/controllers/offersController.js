@@ -63,14 +63,15 @@ const getAllOffersForAdmin = async (req, res) => {
 };
 
 const createOffer = async (req, res) => {
-    const { title, description, discount, store, category, link } = req.body;
+    const { title, description, discount, store, category, link, expiresAt } = req.body;
     try {
         const newOffer = await prisma.$transaction(async (tx) => {
             const createdOffer = await tx.offer.create({
                 data: {
                     title,
                     description: toNull(description),
-                    discount, store, category, link
+                    discount, store, category, link,
+                    expiresAt: expiresAt ? new Date(expiresAt) : null
                 }
             });
             if (req.files && req.files.length > 0) {
@@ -88,7 +89,7 @@ const createOffer = async (req, res) => {
 
 const updateOffer = async (req, res) => {
     const id = parseInt(req.params.id);
-    const { title, description, discount, store, category, link } = req.body;
+    const { title, description, discount, store, category, link, expiresAt } = req.body;
     try {
         const updatedOffer = await prisma.$transaction(async (tx) => {
             await tx.offer.update({
@@ -96,7 +97,8 @@ const updateOffer = async (req, res) => {
                 data: {
                     title,
                     description: toNull(description),
-                    discount, store, category, link
+                    discount, store, category, link,
+                    expiresAt: expiresAt ? new Date(expiresAt) : null
                 }
             });
             if (req.files && req.files.length > 0) {

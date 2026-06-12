@@ -6,17 +6,41 @@ const toNull = (value) => (value === '' || value === undefined ? null : value);
 
 // --- Funzioni Pubbliche ---
 const getDestinationsBySeason = async (req, res) => {
-    const { season } = req.query;
-    if (!season) return res.status(400).json({ message: 'Il parametro "season" è richiesto.' });
-    const capitalizedSeason = season.charAt(0).toUpperCase() + season.slice(1).toLowerCase();
+    const { season, limit, featured, featuredTravel } = req.query;
+
+    // Costruiamo la clausola "where" solo se c'è il parametro season
+    let whereClause = {};
+    if (season && season.trim() !== '') {
+        const capitalizedSeason = season.trim().charAt(0).toUpperCase() + season.trim().slice(1).toLowerCase();
+        whereClause = { season: { equals: capitalizedSeason } };
+    }
+
+    if (featured === 'true') {
+        whereClause.isFeaturedHome = true;
+    }
+
+    if (featuredTravel === 'true') whereClause.isFeaturedTravel = true;
+
+    // Prepariamo le opzioni per Prisma
+    const queryOptions = {
+        where: whereClause,
+        include: { images: true },
+        orderBy: { rating: 'desc' } // Le migliori per prime
+    };
+
+
+    // Applichiamo il limite se è stato richiesto dall'API (es. dalla Homepage)
+    if (limit) {
+        queryOptions.take = parseInt(limit, 10);
+    }
+
     try {
-        const destinations = await prisma.destination.findMany({
-            where: { season: { equals: capitalizedSeason } },
-            include: { images: true },
-            orderBy: { rating: 'desc' }
-        });
+        const destinations = await prisma.destination.findMany(queryOptions);
         res.status(200).json(destinations);
-    } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
+    } catch (error) {
+        console.error("Errore recupero destinazioni:", error);
+        res.status(500).json({ message: 'Errore del server.' });
+    }
 };
 
 const getDestinationById = async (req, res) => {
@@ -65,14 +89,23 @@ const getAllDestinationsForAdmin = async (req, res) => {
 };
 
 const createDestination = async (req, res) => {
-    const { name, region, description, tags, season, rating, imageUrls } = req.body;
+    const { name, region, description, tags, season, rating, isFeaturedHome, isFeaturedTravel } = req.body;
+
+    // Converte la stringa "true"/"false" di FormData in vero booleano
+    const isFeatured = isFeaturedHome === 'true';
+    const isTravel = isFeaturedTravel === 'true';
+
     try {
         const destination = await prisma.destination.create({
             data: {
-                name, region,  description: toNull(description),  tags: toNull(tags), season, rating: parseFloat(rating),
-                images: { create: (JSON.parse(imageUrls || '[]')).map(url => ({ url })) }
+                name, region, description: toNull(description), tags: toNull(tags),
+                season, rating: parseFloat(rating),
+                isFeaturedHome: isFeatured,
+                isFeaturedTravel: isTravel
             }
         });
+
+        // ... (il resto della gestione immagini rimane UGUALE al tuo file originale) ...
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const b64 = Buffer.from(file.buffer).toString("base64");
@@ -86,24 +119,52 @@ const createDestination = async (req, res) => {
     } catch (error) { res.status(500).json({ message: 'Errore nella creazione' }); }
 };
 
+
 const updateDestination = async (req, res) => {
     const id = parseInt(req.params.id);
-    const { name, region, description, tags, season, rating } = req.body;
+    const { name, region, description, tags, season, rating, isFeaturedHome, isFeaturedTravel } = req.body;
+
+    const isFeatured = isFeaturedHome === 'true';
+    const isTravel = isFeaturedTravel === 'true';
+
     try {
         const destination = await prisma.destination.update({
             where: { id },
-            data: { name, region, description: toNull(description), tags: toNull(tags), season, rating: parseFloat(rating) }
+            data: {
+                name, region, description: toNull(description), tags: toNull(tags),
+                season, rating: parseFloat(rating),
+                isFeaturedHome: isFeatured,
+                isFeaturedTravel: isTravel
+            }
         });
+
+        // 2. Se ci sono nuove immagini, caricale e salvale
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const b64 = Buffer.from(file.buffer).toString("base64");
                 let dataURI = "data:" + file.mimetype + ";base64," + b64;
                 const result = await cloudinary.uploader.upload(dataURI, { folder: "fastinfo_destinations" });
-                await prisma.destinationImage.create({ data: { url: result.secure_url, destinationId: id } });
+
+                await prisma.destinationImage.create({
+                    data: {
+                        url: result.secure_url,
+                        destinationId: id
+                    }
+                });
             }
         }
-        res.status(200).json(destination);
-    } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
+
+        // 3. Restituisci la destinazione aggiornata (con le immagini)
+        const finalDestination = await prisma.destination.findUnique({
+            where: { id },
+            include: { images: true }
+        });
+
+        res.status(200).json(finalDestination);
+    } catch (error) {
+        console.error("Errore UPDATE destination:", error); // Questo ci dirà cosa non va
+        res.status(500).json({ message: 'Errore del server.' });
+    }
 };
 
 const deleteDestination = async (req, res) => {
@@ -121,6 +182,22 @@ const deleteDestinationImage = async (req, res) => {
     } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
 
+
+const updateDestinationImage = async (req, res) => {
+    const imageId = parseInt(req.params.imageId);
+    const { attribution } = req.body;
+    try {
+        const updatedImage = await prisma.destinationImage.update({
+            where: { id: imageId },
+            data: { attribution: toNull(attribution) }
+        });
+        res.status(200).json(updatedImage);
+    } catch (error) {
+        console.error("Errore aggiornamento immagine destinazione:", error);
+        res.status(500).json({ message: "Errore del server" });
+    }
+};
+
 // --- UNICO BLOCCO DI EXPORT ---
 export {
     getDestinationsBySeason,
@@ -130,5 +207,6 @@ export {
     updateDestination,
     deleteDestination,
     // La funzione addImagesToDestination non serve più, la logica è dentro updateDestination
-    deleteDestinationImage
+    deleteDestinationImage,
+    updateDestinationImage
 };

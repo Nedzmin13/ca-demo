@@ -94,7 +94,7 @@ function RegionsListPage() {
     return (
         <>
             <Helmet>
-                <title>Esplora l'Italia per Regione | InfoSubito</title>
+                <title>Esplora l'Italia per Regione | ComuniAmo</title>
                 <meta name="description" content="Seleziona una regione d'Italia e scopri tutte le informazioni utili su comuni, province, servizi e attrazioni turistiche." />
             </Helmet>
             <div className="bg-gray-50 py-12">

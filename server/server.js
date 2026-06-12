@@ -26,6 +26,8 @@ import howToArticleRoutes from "./src/routes/howToArticleRoutes.js";
 import imageRoutes from "./src/routes/imageRoutes.js";
 import sitemapRoutes from "./src/routes/sitemapRoutes.js";
 import geoSearchRoutes from "./src/routes/geoSearchRoutes.js";
+import supermarketRoutes from './src/routes/supermarketRoutes.js';
+import chainRoutes from "./src/routes/chainRoutes.js";
 
 dotenv.config();
 
@@ -59,6 +61,8 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/howto-categories', howToCategoryRoutes);
 app.use('/api/howto-articles', howToArticleRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api/supermarkets', supermarketRoutes);
+app.use('/api/chains', chainRoutes);
 
 
 // --- Rotte di base e test ---

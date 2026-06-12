@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useForm, Controller } from 'react-hook-form'; // Importa Controller
+import { useForm, Controller } from 'react-hook-form';
 import {
     fetchOffersForAdmin, createOffer, updateOffer, deleteOffer, deleteOfferImage
 } from '../../api';
@@ -34,9 +34,14 @@ function AdminOffersPage() {
 
     useEffect(() => {
         if (editingOffer) {
-            reset(editingOffer);
+
+            const formattedOffer = { ...editingOffer };
+            if (formattedOffer.expiresAt) {
+                formattedOffer.expiresAt = formattedOffer.expiresAt.split('T')[0];
+            }
+            reset(formattedOffer);
         } else {
-            reset({ title: '', store: '', discount: '', link: '', category: '', description: '', images: null });
+            reset({ title: '', store: '', discount: '', link: '', category: '', description: '', expiresAt: '', images: null });
         }
     }, [editingOffer, reset]);
 
@@ -48,7 +53,8 @@ function AdminOffersPage() {
                     for (let i = 0; i < data.images.length; i++) formData.append('images', data.images[i]);
                 }
             } else {
-                formData.append(key, data[key]);
+
+                formData.append(key, data[key] || '');
             }
         });
         try {
@@ -106,7 +112,13 @@ function AdminOffersPage() {
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                             <div><label>Titolo *</label><input {...register('title', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
                             <div><label>Store *</label><input {...register('store', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
-                            <div><label>Sconto (es. 50% o -20€) *</label><input {...register('discount', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                <div><label>Sconto *</label><input {...register('discount', { required: true })} placeholder="-50% o -20€" className="w-full border p-2 rounded mt-1"/></div>
+                                {/* ▼▼▼ AGGIUNTO CAMPO DATA DI SCADENZA ▼▼▼ */}
+                                <div><label>Scade il (opz.)</label><input type="date" {...register('expiresAt')} className="w-full border p-2 rounded mt-1"/></div>
+                            </div>
+
                             <div><label>Link all'offerta *</label><input type="url" {...register('link', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
                             <div><label>Categoria *</label>
                                 <select {...register('category', { required: true })} className="w-full border p-2 rounded mt-1">
@@ -145,6 +157,8 @@ function AdminOffersPage() {
                         </form>
                     </div>
                 </div>
+
+                {/* LISTA OFFERTE A DESTRA */}
                 <div className="lg:col-span-2">
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         <h2 className="text-2xl font-bold mb-4">Offerte Esistenti ({offers.length})</h2>
@@ -155,7 +169,15 @@ function AdminOffersPage() {
                                         <img src={getImageUrl(offer)} alt={offer.title} className="w-16 h-16 object-cover rounded-md bg-indigo-100"/>
                                         <div>
                                             <p className="font-bold">{offer.title}</p>
-                                            <p className="text-sm text-gray-500">{offer.store}</p>
+                                            <div className="flex gap-2 text-sm text-gray-500">
+                                                <span>{offer.store}</span>
+                                                {/* Mostriamo un pallino rosso se scade presto, verde altrimenti */}
+                                                {offer.expiresAt && (
+                                                    <span className={new Date(offer.expiresAt) < new Date() ? 'text-red-500' : 'text-green-600'}>
+                                                        | Scadenza: {new Date(offer.expiresAt).toLocaleDateString('it-IT')}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3 flex-shrink-0 ml-4">

@@ -29,7 +29,7 @@ function DestinationDetailPage() {
     if (loading) return <div className="text-center p-10">Caricamento...</div>;
     if (!destination) return <div className="text-center p-10">Destinazione non trovata.</div>;
 
-    const pageTitle = `${destination.name}, ${destination.region} - Guida | InfoSubito`;
+    const pageTitle = `${destination.name}, ${destination.region} - Guida | ComuniAmo`;
     const metaDescription = `Scopri ${destination.name}: cosa vedere, quando andare e consigli utili per la tua visita in ${destination.region}. La destinazione perfetta per la stagione: ${destination.season}.`;
 
     return (

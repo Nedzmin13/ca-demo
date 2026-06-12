@@ -85,7 +85,7 @@ function BonusPage() {
             <div className="bg-gray-50 min-h-[60vh] py-16">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
-                        <h1 className="text-4xl font-bold text-gray-900">Bonus 2025</h1>
+                        <h1 className="text-4xl font-bold text-gray-900">Bonus 2026</h1>
                         <p className="mt-3 text-lg text-gray-600">Tutti gli incentivi e bonus disponibili in Italia, aggiornati e verificati</p>
                     </div>
 

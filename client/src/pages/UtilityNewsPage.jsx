@@ -1,87 +1,106 @@
+// client/src/pages/UtilityNewsPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { fetchUtilityInfo } from '../api';
-import { Train, Car, Phone, TriangleAlert, Thermometer, Droplet, Wind, Newspaper, Plus } from 'lucide-react'; // <-- Importa Newspaper, Plus
-import { Link } from 'react-router-dom'; // <-- Importa Link
+import { Train, Phone, Thermometer, Droplet } from 'lucide-react';
 import axios from 'axios';
-import NewsPreviewCard from '../components/NewsPreviewCard';
-// --- Componenti Specifici per questa Pagina ---
 
-// Componente Meteo Migliorato
-const WeatherWidget = ({ city }) => {
+// --- Elenco Capoluoghi di Regione Italiani ---
+const CAPOLUOGHI = [
+    { name: "Aosta", q: "Aosta" },
+    { name: "Torino", q: "Turin" },
+    { name: "Genova", q: "Genoa" },
+    { name: "Milano", q: "Milan" },
+    { name: "Trento", q: "Trento" },
+    { name: "Venezia", q: "Venice" },
+    { name: "Trieste", q: "Trieste" },
+    { name: "Bologna", q: "Bologna" },
+    { name: "Firenze", q: "Florence" },
+    { name: "Ancona", q: "Ancona" },
+    { name: "Perugia", q: "Ancona" }, // Nota: A volte l'API vuole il nome in inglese, per Perugia va bene Perugia
+    { name: "L'Aquila", q: "L'Aquila" },
+    { name: "Roma", q: "Rome" },
+    { name: "Campobasso", q: "Campobasso" },
+    { name: "Napoli", q: "Naples" },
+    { name: "Bari", q: "Bari" },
+    { name: "Potenza", q: "Potenza" },
+    { name: "Catanzaro", q: "Catanzaro" },
+    { name: "Palermo", q: "Palermo" },
+    { name: "Cagliari", q: "Catanzaro" }
+];
+
+// Correzione nomi API per sicurezza
+const WEATHER_CITIES = [
+    "Aosta", "Turin", "Genoa", "Milan", "Trento", "Venice", "Trieste", "Bologna",
+    "Florence", "Ancona", "Perugia", "L'Aquila", "Rome", "Campobasso", "Naples",
+    "Bari", "Potenza", "Catanzaro", "Palermo", "Cagliari"
+];
+
+
+// Componente Meteo Singolo (Compatto)
+const WeatherWidget = ({ cityQuery, displayName }) => {
     const [weather, setWeather] = useState(null);
     const API_KEY = '6848c8465b7730a0fe14449285f7b515';
 
     useEffect(() => {
         const getWeather = async () => {
             try {
-                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},IT&appid=${API_KEY}&units=metric&lang=it`);
+                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityQuery},IT&appid=${API_KEY}&units=metric&lang=it`);
                 setWeather(response.data);
             } catch (error) {
-                console.error(`Errore meteo per ${city}:`, error);
+                console.error(`Errore meteo per ${cityQuery}:`, error);
             }
         };
         getWeather();
-    }, [city]);
+    }, [cityQuery]);
 
     if (!weather) return (
-        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col justify-center items-center h-40 animate-pulse">
-            <div className="h-6 w-24 bg-gray-200 rounded mb-2"></div>
-            <div className="h-10 w-10 bg-gray-200 rounded-full my-2"></div>
-            <div className="h-5 w-20 bg-gray-200 rounded"></div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center items-center h-32 animate-pulse">
+            <div className="h-4 w-16 bg-gray-200 rounded mb-2"></div>
+            <div className="h-8 w-8 bg-gray-200 rounded-full my-1"></div>
+            <div className="h-4 w-12 bg-gray-200 rounded"></div>
         </div>
     );
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
-            <h3 className="font-bold text-xl text-gray-800">{weather.name}</h3>
-            <div className="flex items-center justify-center gap-2 my-2">
-                <Thermometer className="text-red-500" size={28}/>
-                <span className="text-4xl font-bold text-gray-900">{Math.round(weather.main.temp)}°C</span>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+            <h3 className="font-bold text-gray-800 text-sm truncate" title={displayName || weather.name}>
+                {displayName || weather.name}
+            </h3>
+            <div className="flex items-center justify-center gap-1 my-1">
+                <Thermometer className="text-red-500" size={18}/>
+                <span className="text-2xl font-bold text-gray-900">{Math.round(weather.main.temp)}°</span>
             </div>
-            <p className="text-gray-600 capitalize">{weather.weather[0].description}</p>
-            <p className="text-sm text-gray-500 mt-2 flex justify-center items-center gap-1">
-                <Droplet size={14}/> Pioggia {weather.rain ? weather.rain['1h'] : 0}%
+            <p className="text-xs text-gray-500 capitalize truncate" title={weather.weather[0].description}>
+                {weather.weather[0].description}
             </p>
         </div>
     );
 };
 
-// Componente per singolo Sciopero
+// Componente Sciopero
 const StrikeCard = ({ strike }) => (
-    <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-orange-400">
-        <div className="flex justify-between items-start mb-2">
-            <h3 className="text-xl font-bold text-gray-800">{strike.type}</h3>
-            <span className="font-semibold bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm">
-                {new Date(strike.date).toLocaleDateString('it-IT', { day: '2-digit', month: 'long', year: 'numeric' })}
+    <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-orange-400 flex flex-col h-full hover:shadow-lg transition-shadow">
+        <div className="mb-3">
+            <span className="inline-block font-bold bg-orange-100 text-orange-800 px-2.5 py-1 rounded-md text-xs mb-2">
+                {new Date(strike.date).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}
             </span>
+            <h3 className="text-lg font-bold text-gray-800 leading-tight capitalize">{strike.type}</h3>
         </div>
-        <p className="text-sm"><strong className="text-gray-600">Zona:</strong> {strike.zone}</p>
-        <p className="text-sm"><strong className="text-gray-600">Durata:</strong> {strike.duration}</p>
-        <div className="mt-3 pt-3 border-t text-sm">
-            <p><strong className="text-gray-600">Servizi coinvolti:</strong> {strike.services}</p>
+
+        <div className="flex-grow space-y-1">
+            <p className="text-sm"><strong className="text-gray-600">Zona:</strong> <span className="capitalize">{strike.zone}</span></p>
+            <p className="text-sm"><strong className="text-gray-600">Durata:</strong> {strike.duration}</p>
+        </div>
+
+        <div className="mt-4 pt-3 border-t text-sm">
+            <p className="text-gray-700"><strong className="text-gray-600">Coinvolge:</strong> {strike.services}</p>
         </div>
     </div>
 );
 
-// Componente per singola Allerta Traffico
-const TrafficCard = ({ alert }) => (
-    <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500">
-        <div className="flex justify-between items-start mb-2">
-            <h3 className="text-xl font-bold text-gray-800">{alert.highway}</h3>
-            <span className="font-semibold bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
-                +{alert.delay}
-            </span>
-        </div>
-        <p className="text-sm"><strong className="text-gray-600">Tratto:</strong> {alert.stretch}</p>
-        <p className="text-sm"><strong className="text-gray-600">Problema:</strong> {alert.problem}</p>
-        <div className="mt-3 pt-3 border-t text-sm bg-blue-50 text-blue-800 p-3 rounded-lg">
-            <strong>Percorso alternativo:</strong> {alert.alternative}
-        </div>
-    </div>
-);
-
-// Componente per Numero Emergenza
+// Componente Numero Emergenza
 const EmergencyNumberCard = ({ num }) => (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
         <h3 className="text-5xl font-extrabold text-red-600">{num.number}</h3>
@@ -89,9 +108,10 @@ const EmergencyNumberCard = ({ num }) => (
     </div>
 );
 
+
 // --- Pagina Principale ---
 function UtilityNewsPage() {
-    const [utilityData, setUtilityData] = useState({ traffic: [], strikes: [], emergency: [], news: [] });
+    const [utilityData, setUtilityData] = useState({ strikes: [], emergency: [] });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -100,7 +120,7 @@ function UtilityNewsPage() {
                 const response = await fetchUtilityInfo();
                 setUtilityData(response.data);
             } catch (error) {
-                console.error("Errore caricamento notizie utili:", error);
+                console.error("Errore caricamento servizi utili:", error);
             } finally {
                 setLoading(false);
             }
@@ -111,71 +131,69 @@ function UtilityNewsPage() {
     return (
         <>
             <Helmet>
-                <title>Notizie Utili in Tempo Reale | Traffico, Scioperi, Meteo e News | InfoSubito</title>
-                <meta name="description" content="Rimani aggiornato con le notizie utili per chi viaggia e vive in Italia: situazione del traffico, scioperi programmati, previsioni meteo e le ultime notizie del giorno." />
-                <meta property="og:title" content="Notizie Utili in Tempo Reale | Traffico, Scioperi e News" />
-                <meta property="og:description" content="Tutte le informazioni di servizio in un unico posto: viabilità, agitazioni sindacali e ultime news." />
+                <title>Servizi Utili in Tempo Reale | Meteo Italia, Emergenze e Scioperi | ComuniAmo</title>
+                <meta name="description" content="Tutte le informazioni di servizio in un unico posto: meteo nazionale, numeri di emergenza e calendario scioperi dei trasporti in Italia." />
+                <meta property="og:title" content="Servizi Utili | Meteo, Emergenze e Scioperi" />
             </Helmet>
             <div className="bg-gray-50 py-12">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 
-                    {/* Sezione Meteo */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <WeatherWidget city="Milan"/>
-                        <WeatherWidget city="Rome"/>
-                        <WeatherWidget city="Naples"/>
-                        <WeatherWidget city="Florence"/>
+                    {/* SEZIONE METEO: 20 Città */}
+                    <div>
+                        <div className="text-center mb-8">
+                            <h1 className="text-4xl font-extrabold text-gray-800">Meteo Italia</h1>
+                            <p className="text-gray-600 mt-2">La situazione in tempo reale nei capoluoghi di regione</p>
+                        </div>
+
+                        {/* Griglia responsive: 2 colonne su mobile, 4 tablet, 5 desktop (20 capoluoghi = 4 righe da 5 perfette) */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                            {WEATHER_CITIES.map((cityQuery, index) => (
+                                <WeatherWidget
+                                    key={index}
+                                    cityQuery={cityQuery}
+                                    displayName={CAPOLUOGHI[index]?.name || cityQuery}
+                                />
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Sezione Numeri di Emergenza */}
+                    {/* SEZIONE NUMERI DI EMERGENZA */}
                     <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Phone
-                            className="text-red-600"/> Numeri di Emergenza</h2>
-                        {loading ? <p>Caricamento...</p> : utilityData.emergency.length > 0 ? (
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold flex items-center justify-center gap-3">
+                                <Phone className="text-red-600" size={32} /> Numeri di Emergenza Nazionali
+                            </h2>
+                        </div>
+                        {loading ? <p className="text-center">Caricamento...</p> : utilityData.emergency?.length > 0 ? (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 {utilityData.emergency.map(num => <EmergencyNumberCard key={num.id} num={num}/>)}
                             </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessun numero di emergenza
-                            disponibile.</p>}
+                        ) : (
+                            <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500 text-center">
+                                Nessun numero di emergenza impostato.
+                            </p>
+                        )}
                     </div>
 
-                    {/* Sezione Scioperi */}
+                    {/* SEZIONE SCIOPERI */}
                     <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Train
-                            className="text-orange-500"/> Scioperi Trasporti</h2>
-                        {loading ? <p>Caricamento...</p> : utilityData.strikes.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold flex items-center justify-center gap-3">
+                                <Train className="text-orange-500" size={32} /> Allerta Scioperi
+                            </h2>
+                            <p className="text-gray-600 mt-2">Aggiornamenti sulle principali agitazioni sindacali</p>
+                        </div>
+                        {loading ? <p className="text-center">Caricamento...</p> : utilityData.strikes?.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {utilityData.strikes.map(strike => <StrikeCard key={strike.id} strike={strike}/>)}
                             </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuno sciopero previsto al
-                            momento.</p>}
-                    </div>
-
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Newspaper
-                            className="text-sky-600"/> Ultime Notizie</h2>
-                        {loading ? <p>Caricamento...</p> : utilityData.news && utilityData.news.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {utilityData.news.map(newsItem => (
-                                    <NewsPreviewCard key={newsItem.id} news={newsItem}/>
-                                ))}
+                        ) : (
+                            <div className="bg-white p-8 rounded-xl shadow-sm text-center border border-gray-100">
+                                <p className="text-gray-500 text-lg">✅ Nessuno sciopero rilevante previsto a breve.</p>
+                                <p className="text-sm text-gray-400 mt-2">Monitoriamo costantemente la situazione per tenerti aggiornato.</p>
                             </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuna notizia disponibile
-                            al momento.</p>}
+                        )}
                     </div>
-
-                    {/* Sezione Traffico */}
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><TriangleAlert
-                            className="text-red-500"/> Traffico e Viabilità</h2>
-                        {loading ? <p>Caricamento...</p> : utilityData.traffic.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {utilityData.traffic.map(alert => <TrafficCard key={alert.id} alert={alert}/>)}
-                            </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuna segnalazione di
-                            traffico rilevante.</p>}
-                    </div>
-
 
                 </div>
             </div>

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { GlobalSearchBar } from './GlobalSearchBar';
-import logo from '../assets/logo.png'; // <-- 1. IMPORTA L'IMMAGINE DEL LOGO
+import logo from '../assets/logo.png';
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navLinkClass = ({ isActive }) =>
         isActive
-            ? 'text-sky-600 font-semibold border-b-2 border-sky-600 py-1'
+            ? 'text-sky-600 font-semibold py-1'
             : 'text-gray-700 hover:text-sky-600 py-1';
 
     const mobileNavLinkClass = ({ isActive }) =>
@@ -24,7 +24,7 @@ function Navbar() {
                     <div className="flex-shrink-0">
                         {/* --- 2. MODIFICA IL LINK PRINCIPALE --- */}
                         <Link to="/" className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-sky-600">InfoSubito</span>
+                            <span className="text-2xl font-bold text-sky-600">ComuniAmo</span>
                             <img src={logo} alt="Logo InfoSubito" className="h-10 w-10" />
                         </Link>
                     </div>
@@ -37,7 +37,7 @@ function Navbar() {
                         <NavLink to="/top-destinazioni" className={navLinkClass}>Top Destinazioni</NavLink>
                         <NavLink to="/pratiche-utili" className={navLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={navLinkClass}>Come Fare</NavLink>
-                        <NavLink to="/notizie-utili" className={navLinkClass}>Notizie Utili</NavLink>
+                        <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink>
                     </div>
 
                     <div className="hidden sm:block w-64">

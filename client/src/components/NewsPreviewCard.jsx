@@ -2,15 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-// Il componente ora riceve l'intero oggetto 'news'
+
 function NewsPreviewCard({ news }) {
 
-    // Usiamo l'URL dell'immagine da news.imageUrl
+
     const displayImage = news.imageUrl || `https://ui-avatars.com/api/?name=${news.title.replace(/\s/g, '+')}&size=400&background=e0f2fe&color=0891b2`;
 
     return (
         <motion.div
-            whileHover={{ y: -5 }} // Un'animazione leggermente diversa
+            whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 300 }}
             className="bg-white rounded-lg shadow-md overflow-hidden group"
         >

@@ -10,34 +10,52 @@ export const globalSearch = async (req, res) => {
     try {
         const lowerQ = q.toLowerCase();
 
-        const [comuni, offers, itineraries, guides, howToArticles] = await Promise.all([
-            prisma.comune.findMany({ where: { name: { contains: q } }, take: 20, include: { province: true } }),
+        // 1. FETCH DAI DATI
+        // Per i comuni aumentiamo il limite a 100 per essere sicuri di recuperare la corrispondenza esatta
+        // anche se ci sono tanti comuni composti (es. "Romano...", "Roccaromana...").
+        const [rawComuni, offers, itineraries, guides, howToArticles] = await Promise.all([
+            prisma.comune.findMany({
+                where: { name: { contains: q } },
+                take: 100, // Aumentato da 20 a 100 per catturare l'esatta corrispondenza
+                include: { province: true }
+            }),
             prisma.offer.findMany({ where: { title: { contains: q } }, take: 5 }),
             prisma.itinerary.findMany({ where: { title: { contains: q } }, take: 5 }),
             prisma.Guide.findMany({ where: { title: { contains: q } }, take: 5 }),
             prisma.HowToArticle.findMany({ where: { title: { contains: q } }, take: 5 })
         ]);
 
-        // Funzione di ordinamento che mette le corrispondenze esatte in cima
-        const sortByExactMatch = (results, query) => {
-            const exactMatches = [];
-            const otherMatches = [];
-            results.forEach(item => {
-                if ((item.name || item.title).toLowerCase() === query.toLowerCase()) {
-                    exactMatches.push(item);
-                } else {
-                    otherMatches.push(item);
-                }
+        // 2. FUNZIONE DI ORDINAMENTO AVANZATA
+        // Ordina per:
+        // 1. Esatta corrispondenza (Roma)
+        // 2. Inizia con (Romano)
+        // 3. Lunghezza minore (Roma viene prima di Romagnano)
+        const advancedSort = (items) => {
+            return items.sort((a, b) => {
+                const nameA = (a.name || a.title).toLowerCase();
+                const nameB = (b.name || b.title).toLowerCase();
+
+                // Priorità 1: Corrispondenza Esatta
+                if (nameA === lowerQ && nameB !== lowerQ) return -1;
+                if (nameB === lowerQ && nameA !== lowerQ) return 1;
+
+                // Priorità 2: Inizia con la query
+                const startsA = nameA.startsWith(lowerQ);
+                const startsB = nameB.startsWith(lowerQ);
+                if (startsA && !startsB) return -1;
+                if (!startsA && startsB) return 1;
+
+                // Priorità 3: Lunghezza (più corto vince, es. "Roma" < "Romano")
+                return nameA.length - nameB.length;
             });
-            return [...exactMatches, ...otherMatches];
         };
 
-        // Applica l'ordinamento a tutti i risultati
-        const sortedComuni = sortByExactMatch(comuni, q).slice(0, 5);
-        const sortedOffers = sortByExactMatch(offers, q);
-        const sortedItineraries = sortByExactMatch(itineraries, q);
-        const sortedGuides = sortByExactMatch(guides, q);
-        const sortedHowToArticles = sortByExactMatch(howToArticles, q);
+        // Applica ordinamento e taglia i risultati
+        const sortedComuni = advancedSort(rawComuni).slice(0, 6); // Teniamo solo i primi 6 migliori
+        const sortedOffers = advancedSort(offers);
+        const sortedItineraries = advancedSort(itineraries);
+        const sortedGuides = advancedSort(guides);
+        const sortedHowToArticles = advancedSort(howToArticles);
 
         res.json({
             comuni: sortedComuni,

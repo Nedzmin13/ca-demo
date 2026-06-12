@@ -1,74 +1,117 @@
-// client/src/pages/TravelPage.jsx
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Map, List, Eye, Route } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Map, MapPin, Eye, Route as RouteIcon, Star } from 'lucide-react'; // Aggiunto Star
+import {fetchDestinationsBySeason, fetchTopDestinationsTravel} from '../api';
 
-const FeatureCard = ({ icon, title, description, linkTo }) => (
-    <motion.div whileHover={{ y: -5 }} className="w-full">
-        <Link to={linkTo} className="block bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 h-full">
-            <div className="flex items-center justify-center w-16 h-16 bg-sky-100 rounded-full mx-auto mb-6">
-                {icon}
-            </div>
-            <h3 className="text-xl font-bold text-center text-gray-800">{title}</h3>
-            <p className="text-gray-500 text-center mt-2">{description}</p>
-        </Link>
-    </motion.div>
+const TravelCard = ({ title, description, icon, link, colorClass }) => (
+    <Link to={link} className={`bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-t-4 ${colorClass} group flex flex-col items-center text-center`}>
+        <div className={`p-4 rounded-full mb-6 ${colorClass.replace('border-', 'bg-').replace('500', '100')} ${colorClass.replace('border-', 'text-')}`}>
+            {React.cloneElement(icon, { size: 32 })}
+        </div>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
+        <p className="text-gray-600 text-sm">{description}</p>
+    </Link>
 );
 
 function TravelPage() {
-    const iconClass = "w-8 h-8 text-sky-600";
+    const [popularDestinations, setPopularDestinations] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadPopular = async () => {
+            try {
+                // USA LA NUOVA CHIAMATA API
+                const res = await fetchTopDestinationsTravel();
+                setPopularDestinations(res.data?.slice(0, 3) || []);
+            } catch (error) {
+                console.error("Errore caricamento destinazioni popolari:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadPopular();
+    }, []);
 
     return (
         <>
             <Helmet>
-                <title>Viaggiare in Italia: Guide, Itinerari e Destinazioni | InfoSubito</title>
-                <meta name="description" content="Organizza il tuo viaggio in Italia. Scopri le guide dettagliate per ogni regione, provincia e comune. Trova itinerari consigliati e le migliori destinazioni." />
-                <meta property="og:title" content="Viaggiare in Italia: Guide, Itinerari e Destinazioni" />
+                <title>Viaggio in Italia - Regioni, Comuni e Destinazioni | ComuniAmo</title>
+                <meta name="description" content="Esplora l'Italia con InfoSubito. Trova informazioni turistiche, elenchi di comuni e le migliori destinazioni per le tue vacanze." />
             </Helmet>
-            <div className="bg-gray-50 py-16 sm:py-24">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h1 className="text-4xl sm:text-5xl font-extrabold text-sky-600 tracking-tight">Scopri l'Italia</h1>
-                        <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
-                            Trova informazioni utili per il tuo viaggio: benzinai, supermercati, farmacie, ristoranti e molto altro
+
+            <div className="bg-gray-50 min-h-screen py-16">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+
+                    <div className="text-center mb-16">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-sky-700 tracking-tight mb-4">
+                            Scopri l'Italia
+                        </h1>
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                            Esplora il nostro paese attraverso le sue regioni, scopri i comuni e lasciati ispirare dalle destinazioni più belle.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <FeatureCard
-                            icon={<Map className={iconClass} />}
+                    {/* MODIFICA: Ora ci sono solo 3 card principali */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                        <TravelCard
                             title="Esplora per Regione"
-                            description="Naviga per regione e provincia"
-                            linkTo="/viaggio/regioni" // Link alla nuova pagina
+                            description="Naviga tra tutte le regioni e province italiane."
+                            icon={<Map />}
+                            link="/viaggio/regioni"
+                            colorClass="border-sky-500"
                         />
-                        <FeatureCard
-                            icon={<List className={iconClass} />}
-                            title="Servizi Essenziali"
-                            description="Farmacie, ospedali, benzinai"
-                            linkTo="/servizi-essenziali"
+                        <TravelCard
+                            title="Top Destinazioni"
+                            description="Le mete turistiche più consigliate del momento."
+                            icon={<Star />}
+                            link="/top-destinazioni"
+                            colorClass="border-amber-500"
                         />
-                        <FeatureCard
-                            icon={<Eye className={iconClass} />}
-                            title="Cosa Vedere"
-                            description="Attrazioni e punti di interesse"
-                            linkTo="/cosa-vedere"
-                        />
-                        <FeatureCard
-                            icon={<Route className={iconClass} />}
+                        <TravelCard
                             title="Itinerari"
-                            description="Percorsi consigliati"
-                            linkTo="/itinerari"
+                            description="Percorsi e viaggi organizzati passo dopo passo."
+                            icon={<RouteIcon />}
+                            link="/itinerari"
+                            colorClass="border-emerald-500"
                         />
                     </div>
 
-                    <div className="mt-20 text-center">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-4">Destinazioni Popolari</h2>
-                        <p className="text-gray-500">Nessuna destinazione popolare trovata.</p>
-                        {/* Qui in futuro mostreremo le destinazioni con isPopular=true */}
+                    {/* Sezione Destinazioni Popolari */}
+                    <div className="mb-16 text-center">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-8">Destinazioni Popolari</h2>
+
+                        {loading ? (
+                            <p className="text-gray-500">Caricamento...</p>
+                        ) : popularDestinations.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {popularDestinations.map(dest => (
+                                    <Link key={dest.id} to={`/destinazioni/${dest.id}`} className="block relative h-64 rounded-xl overflow-hidden group shadow-md">
+                                        <img
+                                            src={dest.images?.[0]?.url || 'https://via.placeholder.com/400'}
+                                            alt={dest.name}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6 text-left">
+                                            <span className="text-sky-300 text-sm font-bold uppercase tracking-wider mb-1">{dest.region}</span>
+                                            <h3 className="text-white text-xl font-bold">{dest.name}</h3>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-500 italic">Nessuna destinazione trovata.</p>
+                        )}
+
+                        {popularDestinations.length > 0 && (
+                            <div className="mt-8">
+                                <Link to="/top-destinazioni" className="inline-block px-6 py-3 bg-white border border-gray-300 rounded-full font-semibold text-gray-700 hover:bg-gray-50 hover:text-sky-600 transition shadow-sm">
+                                    Vedi tutte le destinazioni
+                                </Link>
+                            </div>
+                        )}
                     </div>
+
                 </div>
             </div>
         </>

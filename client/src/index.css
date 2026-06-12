@@ -1,39 +1,115 @@
-/* client/src/index.css */
+/* client/src/index.css - VERSIONE DEFINITIVA AGGIORNATA */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Stili per l'editor di React Quill nell'area admin */
+/* --- STILI GENERALI EDITOR (Admin) --- */
 .ql-editor {
-    /* Imposta un'altezza minima per l'area di testo */
     min-height: 300px;
 }
 
-/* Regola chiave per le immagini DENTRO l'editor */
 .ql-editor img {
-    /* Forza le immagini a non superare mai la larghezza dell'editor */
     max-width: 100%;
-
-    /* Mantiene le proporzioni */
     height: auto;
-
-    /* Aggiunge un po' di margine per la leggibilità */
     margin: 1rem 0;
 }
 
-/* Stili specifici per la descrizione dei POI */
+/* --- STILI DESCRIZIONE POI --- */
 .poi-description p {
     margin-top: 0;
-    margin-bottom: 0.25rem; /* Aggiunge un piccolo spazio SOTTO ogni paragrafo */
+    margin-bottom: 0.25rem;
+}
+.poi-description p:first-child { margin-top: 0; }
+.poi-description p:last-child { margin-bottom: 0; }
+
+/* --- STILI GUIDE E ARTICOLI (Classe .prose) --- */
+
+/* 1. Stili Base Liste (CON PALLINI ALLINEATI) */
+div.prose ul,
+div.prose-lg ul {
+    list-style-type: disc !important;
+    list-style-position: inside !important; /* Allinea il pallino al testo */
+    padding-left: 0 !important; /* Rimuove padding extra */
+    margin-left: 1.5rem !important; /* Usa margin per il rientro */
+    margin-top: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    color: #374151;
 }
 
-/* Opzionale: se vuoi che il primo paragrafo non abbia spazio sopra */
-.poi-description p:first-child {
-    margin-top: 0;
+div.prose ol,
+div.prose-lg ol {
+    list-style-type: decimal !important;
+    list-style-position: inside !important;
+    padding-left: 0 !important;
+    margin-left: 1.5rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    color: #374151;
 }
 
-/* Opzionale: se vuoi che l'ultimo paragrafo non abbia spazio sotto */
-.poi-description p:last-child {
-    margin-bottom: 0;
+div.prose li {
+    display: list-item !important;
+    margin-bottom: 0.3rem !important;
+    line-height: 1.6;
+}
+
+/* 2. Liste Annidate (HTML Standard) */
+div.prose ul ul,
+div.prose ol ul,
+div.prose ul ol,
+div.prose ol ol {
+    list-style-type: circle !important;
+    list-style-position: inside !important;
+    margin-left: 1.5rem !important; /* Rientro aggiuntivo */
+    margin-top: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+    color: #4b5563;
+}
+
+/* 3. Supporto Classi Indentazione (Quill Editor) */
+.ql-indent-1,
+div.prose .ql-indent-1 {
+    margin-left: 2rem !important; /* Usa margin per coerenza */
+    padding-left: 0 !important;
+}
+
+.ql-indent-2,
+div.prose .ql-indent-2 {
+    margin-left: 4rem !important;
+    padding-left: 0 !important;
+}
+
+.ql-indent-3,
+div.prose .ql-indent-3 {
+    margin-left: 6rem !important;
+    padding-left: 0 !important;
+}
+
+/* 4. Tipografia Generale */
+div.prose strong, div.prose b {
+    font-weight: 600 !important;
+    color: #111827;
+}
+
+div.prose p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+    color: #374151;
+}
+
+div.prose h1, div.prose h2, div.prose h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #111827;
+}
+
+div.prose a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+div.prose a:hover {
+    color: #1d4ed8;
 }

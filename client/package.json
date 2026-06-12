@@ -24,12 +24,13 @@
     "react-leaflet": "^4.2.1",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.1",
+    "react-select": "^5.10.2",
     "react-share": "^5.2.2",
     "react-simple-icons": "^1.0.0-beta.5",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
