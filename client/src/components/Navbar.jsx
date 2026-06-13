@@ -55,7 +55,10 @@ function Navbar() {
             {isMenuOpen && (
                 <div className="md:hidden border-t bg-white">
                     <div className="px-4 pt-4 pb-6 space-y-4">
-                        <div className="mb-4"> <GlobalSearchBar /> </div>
+                        {/* ▼ AGGIUNTA LA FUNZIONE PER CHIUDERE IL MENU ▼ */}
+                        <div className="mb-4">
+                            <GlobalSearchBar onSearchComplete={() => setIsMenuOpen(false)} />
+                        </div>
                         <NavLink to="/" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Home</NavLink>
                         <NavLink to="/viaggio" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Viaggio</NavLink>
                         <NavLink to="/affari-sconti" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Affari & Sconti</NavLink>
