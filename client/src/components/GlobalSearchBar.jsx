@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCombobox } from 'downshift';
 import useDebounce from '../hooks/useDebounce';
 import { globalSearch } from '../api';
-import { Search, MapPin, Tag, Route as RouteIcon, BookOpen, Wrench } from 'lucide-react';
+import { Search, MapPin, Tag, BookOpen, Wrench } from 'lucide-react';
 
 export function GlobalSearchBar({ onSearchComplete }) {
     const navigate = useNavigate();
@@ -23,7 +23,6 @@ export function GlobalSearchBar({ onSearchComplete }) {
                 const combinedResults = [
                     ...response.data.comuni.map(item => ({ ...item, resultType: 'Comune' })),
                     ...response.data.offers.map(item => ({ ...item, resultType: 'Offerta' })),
-                    ...response.data.itineraries.map(item => ({ ...item, resultType: 'Itinerario' })),
                     ...response.data.guides.map(item => ({ ...item, resultType: 'Pratica Utile' })),
                     ...response.data.howToArticles.map(item => ({ ...item, resultType: 'Come Fare' })),
                 ];
@@ -55,7 +54,6 @@ export function GlobalSearchBar({ onSearchComplete }) {
             // Navigazione
             if (selectedItem.resultType === 'Comune') navigate(`/comune/${selectedItem.slug}`);
             else if (selectedItem.resultType === 'Offerta') navigate(`/offerte/${selectedItem.id}`);
-            else if (selectedItem.resultType === 'Itinerario') navigate(`/itinerari/${selectedItem.id}`);
             else if (selectedItem.resultType === 'Pratica Utile') navigate(`/pratiche-utili/${selectedItem.slug}`);
             else if (selectedItem.resultType === 'Come Fare') navigate(`/come-fare/${selectedItem.slug}`);
 
@@ -86,7 +84,6 @@ export function GlobalSearchBar({ onSearchComplete }) {
                     <li key={`${item.id}-${item.resultType}`} {...getItemProps({ item, index })} className="px-4 py-2 hover:bg-sky-50 cursor-pointer flex items-center gap-3 border-b">
                         {item.resultType === 'Comune' && <MapPin size={16} className="text-gray-400" />}
                         {item.resultType === 'Offerta' && <Tag size={16} className="text-gray-400" />}
-                        {item.resultType === 'Itinerario' && <RouteIcon size={16} className="text-gray-400" />}
                         {item.resultType === 'Pratica Utile' && <BookOpen size={16} className="text-gray-400" />}
                         {item.resultType === 'Come Fare' && <Wrench size={16} className="text-gray-400" />}
                         <div>
