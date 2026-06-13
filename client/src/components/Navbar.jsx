@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom'; // <-- Aggiunto useLocation
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { GlobalSearchBar } from './GlobalSearchBar';
 import logo from '../assets/logo.png';
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    // Inizializza l'ascoltatore della posizione (l'URL attuale)
     const location = useLocation();
 
-    // ▼▼▼ LA SOLUZIONE DEFINITIVA ▼▼▼
-    // Questo useEffect si attiva OGNI VOLTA che cambi pagina.
-    // Appena la pagina cambia, chiude forzatamente il menu a tendina!
+    // Chiude il menu quando cambi pagina
     useEffect(() => {
         setIsMenuOpen(false);
     }, [location]);
-    // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
     const navLinkClass = ({ isActive }) =>
         isActive
@@ -47,15 +42,15 @@ function Navbar() {
                         <NavLink to="/top-destinazioni" className={navLinkClass}>Top Destinazioni</NavLink>
                         <NavLink to="/pratiche-utili" className={navLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={navLinkClass}>Come Fare</NavLink>
-                        {/* Nota: Ho aggiornato il nome da "Notizie Utili" a "Servizi Utili" per coerenza col resto */}
                         <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink>
                     </div>
 
+                    {/* Barra di ricerca per il PC */}
                     <div className="hidden sm:block w-64">
-                        {/* Qui usiamo la barra normale */}
                         <GlobalSearchBar />
                     </div>
 
+                    {/* Tasto Hamburger per Mobile */}
                     <div className="md:hidden flex items-center">
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Apri menu">
                             {isMenuOpen ? <X size={28}/> : <Menu size={28}/>}
@@ -64,15 +59,16 @@ function Navbar() {
                 </div>
             </nav>
 
+            {/* MENU A TENDINA MOBILE */}
             {isMenuOpen && (
                 <div className="md:hidden border-t bg-white absolute w-full left-0 shadow-lg z-40">
                     <div className="px-4 pt-4 pb-6 space-y-4 h-screen overflow-y-auto">
+
+                        {/* ▼▼▼ BARRA DI RICERCA MOBILE CON ORDINE DI CHIUSURA ▼▼▼ */}
                         <div className="mb-4">
-                            {/* Ora non serve più impazzire con funzioni strane, la barra è quella pulita! */}
-                            <GlobalSearchBar />
+                            <GlobalSearchBar onSearchComplete={() => setIsMenuOpen(false)} />
                         </div>
 
-                        {/* Ho tolto tutti i vecchi onClick={() => setIsMenuOpen(false)} perché ora ci pensa useEffect! */}
                         <NavLink to="/" className={mobileNavLinkClass}>Home</NavLink>
                         <NavLink to="/viaggio" className={mobileNavLinkClass}>Viaggio</NavLink>
                         <NavLink to="/affari-sconti" className={mobileNavLinkClass}>Affari & Sconti</NavLink>

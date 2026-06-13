@@ -5,7 +5,6 @@ import useDebounce from '../hooks/useDebounce';
 import { globalSearch } from '../api';
 import { Search, MapPin, Tag, Route as RouteIcon, BookOpen, Wrench } from 'lucide-react';
 
-// ▼ AGGIUNTO IL PROP onSearchComplete ▼
 export function GlobalSearchBar({ onSearchComplete }) {
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
@@ -29,15 +28,23 @@ export function GlobalSearchBar({ onSearchComplete }) {
                     ...response.data.howToArticles.map(item => ({ ...item, resultType: 'Come Fare' })),
                 ];
                 setItems(combinedResults);
-            } catch (error) { console.error("Errore:", error); }
+            } catch (error) {
+                console.error("Errore nella ricerca globale:", error);
+            }
         };
         fetchData();
     }, [debouncedInputValue]);
 
-    const { isOpen, getMenuProps, getInputProps, getItemProps } = useCombobox({
+    const {
+        isOpen,
+        getMenuProps,
+        getInputProps,
+        getItemProps,
+        reset
+    } = useCombobox({
         items,
         inputValue,
-        selectedItem: null,
+        selectedItem: null, // Evita autocompilazioni
         itemToString: (item) => (item ? item.title || item.name : ''),
         onInputValueChange: ({ inputValue: newInputValue }) => {
             setInputValue(newInputValue || '');
@@ -45,16 +52,19 @@ export function GlobalSearchBar({ onSearchComplete }) {
         onSelectedItemChange: ({ selectedItem }) => {
             if (!selectedItem) return;
 
+            // Navigazione
             if (selectedItem.resultType === 'Comune') navigate(`/comune/${selectedItem.slug}`);
             else if (selectedItem.resultType === 'Offerta') navigate(`/offerte/${selectedItem.id}`);
             else if (selectedItem.resultType === 'Itinerario') navigate(`/itinerari/${selectedItem.id}`);
             else if (selectedItem.resultType === 'Pratica Utile') navigate(`/pratiche-utili/${selectedItem.slug}`);
             else if (selectedItem.resultType === 'Come Fare') navigate(`/come-fare/${selectedItem.slug}`);
 
+            // Svuota barra
             setInputValue('');
             setItems([]);
+            reset();
 
-            // ▼ SE C'È L'ORDINE DI CHIUSURA, ESEGUILO! ▼
+            // ▼▼▼ FORZA LA CHIUSURA DEL MENU ▼▼▼
             if (onSearchComplete) {
                 onSearchComplete();
             }
@@ -63,8 +73,14 @@ export function GlobalSearchBar({ onSearchComplete }) {
 
     return (
         <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Search className="h-5 w-5 text-gray-400" /></div>
-            <input {...getInputProps({ value: inputValue })} placeholder="Cerca città, offerte..." className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+                {...getInputProps({ value: inputValue })}
+                placeholder="Cerca città, offerte..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
             <ul {...getMenuProps()} className={`absolute mt-1 w-full bg-white shadow-lg rounded-md max-h-80 overflow-auto z-50 ${!isOpen && 'hidden'}`}>
                 {isOpen && items.length > 0 && items.map((item, index) => (
                     <li key={`${item.id}-${item.resultType}`} {...getItemProps({ item, index })} className="px-4 py-2 hover:bg-sky-50 cursor-pointer flex items-center gap-3 border-b">
@@ -73,10 +89,15 @@ export function GlobalSearchBar({ onSearchComplete }) {
                         {item.resultType === 'Itinerario' && <RouteIcon size={16} className="text-gray-400" />}
                         {item.resultType === 'Pratica Utile' && <BookOpen size={16} className="text-gray-400" />}
                         {item.resultType === 'Come Fare' && <Wrench size={16} className="text-gray-400" />}
-                        <div><p className="font-semibold text-sm">{item.title || item.name}</p><p className="text-xs text-gray-500">{item.resultType}</p></div>
+                        <div>
+                            <p className="font-semibold text-sm">{item.title || item.name}</p>
+                            <p className="text-xs text-gray-500">{item.resultType}</p>
+                        </div>
                     </li>
                 ))}
-                {isOpen && debouncedInputValue.length >= 3 && items.length === 0 && <li className="px-4 py-2 text-sm text-gray-500">Nessun risultato trovato.</li>}
+                {isOpen && debouncedInputValue.length >= 3 && items.length === 0 && (
+                    <li className="px-4 py-2 text-sm text-gray-500">Nessun risultato trovato.</li>
+                )}
             </ul>
         </div>
     );
