@@ -4,48 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.jsx" afterDir="false" />
+    <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="///">
       <change beforePath="$PROJECT_DIR$/client/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/api/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Footer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Hero.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Hero.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/HomeCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/HomeCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ImageGallery.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ImageGallery.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/NewsPreviewCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/NewsPreviewCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/layouts/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/layouts/AdminLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/DestinationDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/DestinationDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/HomePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ItinerariesListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ItinerariesListPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/OffersPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OffersPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ProvinceDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ProvinceDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/RegionDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/RegionDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/RegionsListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/RegionsListPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/TopDestinationsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/TopDestinationsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/TravelPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/TravelPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminComuneDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminComuneDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminDestinationsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminDestinationsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminOffersPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminOffersPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/server/prisma/schema.prisma" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/comuniController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/comuniController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/destinationsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/destinationsController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/offersController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/offersController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/poiController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/poiController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/searchController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/searchController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/comuneRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/comuneRoutes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/destinationRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/destinationRoutes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +105,7 @@
       <workItem from="1777223138915" duration="39284000" />
       <workItem from="1779179358748" duration="1425000" />
       <workItem from="1779472648730" duration="31062000" />
-      <workItem from="1781270385216" duration="2121000" />
+      <workItem from="1781270385216" duration="6104000" />
     </task>
     <task id="LOCAL-00001" summary="///">
       <option name="closed" value="true" />

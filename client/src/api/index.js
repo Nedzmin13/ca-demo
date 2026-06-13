@@ -3,8 +3,10 @@
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
-const PrivateAPI = axios.create({ baseURL: 'http://localhost:5000/api' });
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const API = axios.create({ baseURL: BASE_URL });
+const PrivateAPI = axios.create({ baseURL: BASE_URL });
 
 // Questo intercettore aggiunge automaticamente il token a ogni richiesta di PrivateAPI
 PrivateAPI.interceptors.request.use((config) => {
