@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom'; // <-- Aggiunto useLocation
 import { Menu, X } from 'lucide-react';
 import { GlobalSearchBar } from './GlobalSearchBar';
 import logo from '../assets/logo.png';
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Inizializza l'ascoltatore della posizione (l'URL attuale)
+    const location = useLocation();
+
+    // ▼▼▼ LA SOLUZIONE DEFINITIVA ▼▼▼
+    // Questo useEffect si attiva OGNI VOLTA che cambi pagina.
+    // Appena la pagina cambia, chiude forzatamente il menu a tendina!
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [location]);
+    // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
     const navLinkClass = ({ isActive }) =>
         isActive
@@ -22,10 +33,9 @@ function Navbar() {
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex-shrink-0">
-                        {/* --- 2. MODIFICA IL LINK PRINCIPALE --- */}
                         <Link to="/" className="flex items-center gap-2">
                             <span className="text-2xl font-bold text-sky-600">ComuniAmo</span>
-                            <img src={logo} alt="Logo InfoSubito" className="h-10 w-10" />
+                            <img src={logo} alt="Logo ComuniAmo" className="h-10 w-10" />
                         </Link>
                     </div>
 
@@ -37,10 +47,12 @@ function Navbar() {
                         <NavLink to="/top-destinazioni" className={navLinkClass}>Top Destinazioni</NavLink>
                         <NavLink to="/pratiche-utili" className={navLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={navLinkClass}>Come Fare</NavLink>
+                        {/* Nota: Ho aggiornato il nome da "Notizie Utili" a "Servizi Utili" per coerenza col resto */}
                         <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink>
                     </div>
 
                     <div className="hidden sm:block w-64">
+                        {/* Qui usiamo la barra normale */}
                         <GlobalSearchBar />
                     </div>
 
@@ -53,20 +65,22 @@ function Navbar() {
             </nav>
 
             {isMenuOpen && (
-                <div className="md:hidden border-t bg-white">
-                    <div className="px-4 pt-4 pb-6 space-y-4">
-                        {/* ▼ AGGIUNTA LA FUNZIONE PER CHIUDERE IL MENU ▼ */}
+                <div className="md:hidden border-t bg-white absolute w-full left-0 shadow-lg z-40">
+                    <div className="px-4 pt-4 pb-6 space-y-4 h-screen overflow-y-auto">
                         <div className="mb-4">
-                            <GlobalSearchBar onSearchComplete={() => setIsMenuOpen(false)} />
+                            {/* Ora non serve più impazzire con funzioni strane, la barra è quella pulita! */}
+                            <GlobalSearchBar />
                         </div>
-                        <NavLink to="/" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Home</NavLink>
-                        <NavLink to="/viaggio" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Viaggio</NavLink>
-                        <NavLink to="/affari-sconti" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Affari & Sconti</NavLink>
-                        <NavLink to="/bonus" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Bonus</NavLink>
-                        <NavLink to="/top-destinazioni" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Top Destinazioni</NavLink>
-                        <NavLink to="/pratiche-utili" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Pratiche Utili</NavLink>
-                        <NavLink to="/come-fare" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Come Fare</NavLink>
-                        <NavLink to="/notizie-utili" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Notizie Utili</NavLink>
+
+                        {/* Ho tolto tutti i vecchi onClick={() => setIsMenuOpen(false)} perché ora ci pensa useEffect! */}
+                        <NavLink to="/" className={mobileNavLinkClass}>Home</NavLink>
+                        <NavLink to="/viaggio" className={mobileNavLinkClass}>Viaggio</NavLink>
+                        <NavLink to="/affari-sconti" className={mobileNavLinkClass}>Affari & Sconti</NavLink>
+                        <NavLink to="/bonus" className={mobileNavLinkClass}>Bonus</NavLink>
+                        <NavLink to="/top-destinazioni" className={mobileNavLinkClass}>Top Destinazioni</NavLink>
+                        <NavLink to="/pratiche-utili" className={mobileNavLinkClass}>Pratiche Utili</NavLink>
+                        <NavLink to="/come-fare" className={mobileNavLinkClass}>Come Fare</NavLink>
+                        <NavLink to="/notizie-utili" className={mobileNavLinkClass}>Servizi Utili</NavLink>
                     </div>
                 </div>
             )}
