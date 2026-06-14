@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Mail } from 'lucide-react'; // <-- Importa l'icona per il box contatti
+import { Mail } from 'lucide-react'; 
 import Accordion from '../components/Accordion';
 
 const faqData = [
@@ -39,7 +39,7 @@ const faqData = [
     },
     {
         question: 'Come posso contattarvi per collaborazioni o affiliate marketing?',
-        answer: 'Siamo sempre aperti a nuove collaborazioni! Per proposte di affiliate marketing, partnership o altre sinergie, ti invitiamo a scriverci direttamente all\'indirizzo email <strong>info@infosubito.it</strong>. Analizzeremo la tua proposta e ti risponderemo il prima possibile.'
+        answer: 'Siamo sempre aperti a nuove collaborazioni! Per proposte di affiliate marketing, partnership o altre sinergie, ti invitiamo a scriverci direttamente all\'indirizzo email <strong>info@comuniamo.it</strong>. Analizzeremo la tua proposta e ti risponderemo il prima possibile.'
     }
 ];
 
