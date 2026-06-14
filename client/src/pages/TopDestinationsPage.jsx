@@ -11,32 +11,42 @@ const seasons = [
     { id: 'Inverno', label: 'Inverno', icon: <Snowflake size={18} /> },
 ];
 
-const DestinationCard = ({ dest }) => (
-    <Link to={`/destinazioni/${dest.id}`} className="block bg-white rounded-lg shadow-md overflow-hidden group">
-        <div className="overflow-hidden">
-            <img
-                src={dest.images && dest.images[0] ? dest.images[0].url : 'https://via.placeholder.com/400x225'}
-                alt={dest.name}
-                className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-        </div>
-        <div className="p-4">
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="text-xl font-bold group-hover:text-purple-600">{dest.name}</h3>
-                    <p className="text-sm text-gray-500">{dest.region}</p>
-                </div>
-                <div className="flex items-center gap-1 bg-yellow-400 text-white font-bold px-2 py-1 rounded-full text-sm">
-                    <Star size={14} className="fill-white"/> {dest.rating.toFixed(1)}
-                </div>
+const DestinationCard = ({ dest }) => {
+    // ▼▼▼ STESSA PULIZIA TESTO DELLA HOMEPAGE ▼▼▼
+    let cleanDescription = dest.description ? dest.description.replace(/<[^>]+>/g, ' ') : '';
+    cleanDescription = cleanDescription
+        .trim()
+        .replace(/^(In breve|In sintesi)[\s\-:]*/i, '')
+        .trim();
+    // ▲▲▲ ▲▲▲ ▲▲▲
+
+    return (
+        <Link to={`/destinazioni/${dest.id}`} className="block bg-white rounded-xl shadow-md overflow-hidden group border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div className="overflow-hidden">
+                <img
+                    src={dest.images && dest.images[0] ? dest.images[0].url : 'https://via.placeholder.com/400x225'}
+                    alt={dest.name}
+                    className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-105"
+                />
             </div>
-            <div
-                className="text-gray-600 mt-2 text-sm line-clamp-3"
-                dangerouslySetInnerHTML={{__html: dest.description}}
-            />
-        </div>
-    </Link>
-);
+            <div className="p-5 flex flex-col h-full">
+                <div className="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 className="text-xl font-extrabold text-gray-900 group-hover:text-purple-600 transition-colors">{dest.name}</h3>
+                        <p className="text-sm text-gray-500 font-medium">{dest.region}</p>
+                    </div>
+                    <div className="flex items-center gap-1 bg-amber-400 text-white font-bold px-2.5 py-1 rounded-full text-sm shadow-sm">
+                        <Star size={14} className="fill-white"/> {dest.rating.toFixed(1)}
+                    </div>
+                </div>
+                {/* Usiamo il testo pulito invece dell'HTML */}
+                <p className="text-gray-600 mt-2 text-sm line-clamp-3">
+                    {cleanDescription}
+                </p>
+            </div>
+        </Link>
+    );
+};
 
 function TopDestinationsPage() {
     const [activeSeason, setActiveSeason] = useState('Primavera');
@@ -65,25 +75,23 @@ function TopDestinationsPage() {
                 <meta name="description" content="Scopri le migliori destinazioni italiane per ogni stagione. Trova idee e ispirazione per il tuo prossimo viaggio in primavera, estate, autunno o inverno." />
                 <meta property="og:title" content="Top Destinazioni in Italia per Stagione" />
             </Helmet>
-            <div className="bg-white py-12">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gray-50 min-h-screen py-12">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
                     <div className="text-center mb-12">
-                        <h1 className="text-4xl font-bold text-purple-600">Top Destinazioni</h1>
-                        <p className="mt-3 text-lg text-gray-600">Le destinazioni più belle d'Italia per ogni stagione dell'anno</p>
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-purple-700 tracking-tight">Top Destinazioni</h1>
+                        <p className="mt-4 text-lg text-gray-600">Le destinazioni più belle d'Italia per ogni stagione dell'anno</p>
                     </div>
 
-                    {/* --- NAVIGAZIONE RESPONSIVE IBRIDA --- */}
-
-                    {/* Tabs per Desktop (visibili da 'sm' in su) */}
-                    <div className="hidden sm:flex justify-center border-b mb-10">
+                    {/* --- NAVIGAZIONE DESKTOP --- */}
+                    <div className="hidden sm:flex justify-center border-b border-gray-200 mb-10">
                         {seasons.map(season => (
                             <button
                                 key={season.id}
                                 onClick={() => setActiveSeason(season.id)}
-                                className={`flex items-center gap-2 px-6 py-3 font-semibold text-gray-500 border-b-2 transition-colors ${
+                                className={`flex items-center gap-2 px-8 py-4 font-semibold text-sm uppercase tracking-wider transition-colors ${
                                     activeSeason === season.id
-                                        ? 'border-purple-600 text-purple-600'
-                                        : 'border-transparent hover:border-gray-300 hover:text-gray-700'
+                                        ? 'border-b-2 border-purple-600 text-purple-700 bg-purple-50 rounded-t-lg'
+                                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-t-lg'
                                 }`}
                             >
                                 {season.icon} {season.label}
@@ -91,35 +99,36 @@ function TopDestinationsPage() {
                         ))}
                     </div>
 
-                    {/* Bottoni per Mobile (nascosti da 'sm' in su) */}
-                    <div className="sm:hidden flex justify-center items-center flex-wrap gap-3 mb-12">
+                    {/* --- NAVIGAZIONE MOBILE (Griglia 2x2 Perfetta) --- */}
+                    <div className="sm:hidden grid grid-cols-2 gap-3 mb-10">
                         {seasons.map(season => (
                             <button
                                 key={season.id}
                                 onClick={() => setActiveSeason(season.id)}
-                                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 flex items-center gap-2 ${
+                                className={`w-full py-3 text-sm font-bold rounded-xl transition-all duration-200 flex justify-center items-center gap-2 border ${
                                     activeSeason === season.id
-                                        ? 'bg-purple-600 text-white shadow-md'
-                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
+                                        ? 'bg-purple-600 text-white border-purple-600 shadow-md scale-[1.02]'
+                                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 shadow-sm'
                                 }`}
                             >
                                 {season.icon} {season.label}
                             </button>
                         ))}
                     </div>
-
                     {/* --- FINE NAVIGAZIONE --- */}
 
                     {/* Risultati */}
                     <div>
                         {loading ? (
-                            <div className="text-center">Caricamento...</div>
+                            <div className="text-center py-20 text-gray-500">Caricamento...</div>
                         ) : destinations.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {destinations.map(dest => <DestinationCard key={dest.id} dest={dest} />)}
                             </div>
                         ) : (
-                            <p className="text-center text-gray-500 py-10">Nessuna destinazione trovata per questa stagione.</p>
+                            <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+                                <p className="text-gray-500 text-lg">Nessuna destinazione trovata per questa stagione.</p>
+                            </div>
                         )}
                     </div>
                 </div>
