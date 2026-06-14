@@ -44,7 +44,7 @@ function Footer() {
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Link Utili</h4>
                         <ul className="space-y-3 text-sm">
                             <li><Link to="/chi-siamo" className="hover:text-sky-400 transition-colors">Chi Siamo</Link></li>
-                            <li><a href="mailto:info@infosubito.it" className="hover:text-sky-400 transition-colors">Contatti</a></li>
+                            <li><a href="mailto:info@comuniamo.it" className="hover:text-sky-400 transition-colors">Contatti</a></li>
                             <li><Link to="/faq" className="hover:text-sky-400 transition-colors">FAQ e Assistenza</Link></li>
                         </ul>
                     </div>

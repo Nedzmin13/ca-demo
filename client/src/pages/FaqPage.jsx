@@ -78,7 +78,7 @@ function FaqPage() {
                             Il nostro team è sempre a disposizione per aiutarti, ascoltare suggerimenti o valutare proposte di collaborazione.
                         </p>
                         <a
-                            href="mailto:info@infosubito.it"
+                            href="mailto:info@comuniamo.it"
                             className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-full shadow-md transition-transform hover:-translate-y-1 inline-block"
                         >
                             Scrivici un'email
