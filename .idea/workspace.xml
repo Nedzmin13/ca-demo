@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/FaqPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/FaqPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -105,7 +106,7 @@
       <workItem from="1777223138915" duration="39284000" />
       <workItem from="1779179358748" duration="1425000" />
       <workItem from="1779472648730" duration="31062000" />
-      <workItem from="1781270385216" duration="20601000" />
+      <workItem from="1781270385216" duration="21861000" />
     </task>
     <task id="LOCAL-00001" summary="///">
       <option name="closed" value="true" />
@@ -243,7 +244,23 @@
       <option name="project" value="LOCAL" />
       <updated>1781473892571</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="///">
+      <option name="closed" value="true" />
+      <created>1781474297863</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1781474297863</updated>
+    </task>
+    <task id="LOCAL-00019" summary="///">
+      <option name="closed" value="true" />
+      <created>1781474319075</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1781474319075</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

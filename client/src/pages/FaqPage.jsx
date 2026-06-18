@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Mail } from 'lucide-react'; 
+import { Mail } from 'lucide-react';
 import Accordion from '../components/Accordion';
 
 const faqData = [
