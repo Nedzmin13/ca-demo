@@ -2,8 +2,9 @@ import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../config/prismaClient.js';
 
-// SOSTITUISCI QUESTO CON IL TUO DOMINIO FINALE QUANDO ANDRAI ONLINE
-const BASE_URL = 'http://localhost:5173';
+// ▼▼▼ MODIFICATO: ORA PUNTA AL TUO SITO VERO ▼▼▼
+const BASE_URL = 'https://comuniamo.it';
+// ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
 export const generateSitemap = async (req, res) => {
     try {
