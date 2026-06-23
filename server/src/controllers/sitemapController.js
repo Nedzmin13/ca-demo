@@ -13,10 +13,11 @@ const generateXML = async (links) => {
 // --- 1. L'INDICE PRINCIPALE ---
 export const getSitemapIndex = async (req, res) => {
     try {
-        // Calcoliamo quante mappe servono per i POI (limite 30.000 per file per sicurezza)
         const poiCount = await prisma.pointofinterest.count();
         const poisPerFile = 30000;
-        const totalPoiPages = Math.ceil(poiCount / poisPerSitemap);
+
+        // ▼▼▼ ECCO L'ERRORE CHE HO CORRETTO QUI SOTTO ▼▼▼
+        const totalPoiPages = Math.ceil(poiCount / poisPerFile);
 
         let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
@@ -34,6 +35,7 @@ export const getSitemapIndex = async (req, res) => {
         res.header('Content-Type', 'application/xml');
         res.send(xml);
     } catch (error) {
+        console.error("Errore Sitemap Index:", error);
         res.status(500).send('Error generating sitemap index');
     }
 };
@@ -66,7 +68,10 @@ export const getSitemapMain = async (req, res) => {
 
         res.header('Content-Type', 'application/xml');
         res.send(await generateXML(links));
-    } catch (error) { res.status(500).send('Error'); }
+    } catch (error) {
+        console.error("Errore Sitemap Main:", error);
+        res.status(500).send('Error');
+    }
 };
 
 // --- 3. MAPPA COMUNI ---
