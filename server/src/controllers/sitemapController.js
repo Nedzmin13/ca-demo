@@ -2,86 +2,102 @@ import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../config/prismaClient.js';
 
-// ▼▼▼ MODIFICATO: ORA PUNTA AL TUO SITO VERO ▼▼▼
 const BASE_URL = 'https://comuniamo.it';
-// ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
-export const generateSitemap = async (req, res) => {
+// Helper per generare l'XML facilmente
+const generateXML = async (links) => {
+    const stream = new SitemapStream({ hostname: BASE_URL });
+    return await streamToPromise(Readable.from(links).pipe(stream)).then(data => data.toString());
+};
+
+// --- 1. L'INDICE PRINCIPALE ---
+export const getSitemapIndex = async (req, res) => {
+    try {
+        // Calcoliamo quante mappe servono per i POI (limite 30.000 per file per sicurezza)
+        const poiCount = await prisma.pointofinterest.count();
+        const poisPerFile = 30000;
+        const totalPoiPages = Math.ceil(poiCount / poisPerSitemap);
+
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+        // Aggiungi mappa principale e comuni
+        xml += `  <sitemap>\n    <loc>${BASE_URL}/sitemap-main.xml</loc>\n  </sitemap>\n`;
+        xml += `  <sitemap>\n    <loc>${BASE_URL}/sitemap-comuni.xml</loc>\n  </sitemap>\n`;
+
+        // Aggiungi le mappe paginate dei POI
+        for (let i = 1; i <= totalPoiPages; i++) {
+            xml += `  <sitemap>\n    <loc>${BASE_URL}/sitemap-pois-${i}.xml</loc>\n  </sitemap>\n`;
+        }
+
+        xml += `</sitemapindex>`;
+
+        res.header('Content-Type', 'application/xml');
+        res.send(xml);
+    } catch (error) {
+        res.status(500).send('Error generating sitemap index');
+    }
+};
+
+// --- 2. MAPPA MAIN (Pagine statiche, Destinazioni, Guide, Offerte) ---
+export const getSitemapMain = async (req, res) => {
     try {
         const links = [];
 
-        // --- 1. Pagine Statiche Principali ---
-        const staticPages = [
-            '/', '/viaggio', '/affari-sconti', '/bonus', '/top-destinazioni',
-            '/pratiche-utili', '/come-fare', '/notizie-utili', '/chi-siamo', '/faq',
-            '/privacy-policy', '/cookie-policy', '/termini-e-condizioni'
-        ];
+        // Pagine base
+        const staticPages = ['/', '/viaggio', '/affari-sconti', '/bonus', '/top-destinazioni', '/pratiche-utili', '/come-fare', '/notizie-utili', '/chi-siamo', '/faq'];
         staticPages.forEach(url => links.push({ url, changefreq: 'weekly', priority: 0.8 }));
 
-        // --- 2. Pagine Dinamiche dal Database ---
-
-        // Regioni, Province e Comuni
+        // Regioni e Province
         const regions = await prisma.region.findMany({ select: { name: true } });
         regions.forEach(r => links.push({ url: `/viaggio/${r.name.toLowerCase()}` }));
 
         const provinces = await prisma.province.findMany({ select: { sigla: true, region: { select: { name: true } } } });
         provinces.forEach(p => links.push({ url: `/viaggio/${p.region.name.toLowerCase()}/${p.sigla.toLowerCase()}` }));
 
-        const comuni = await prisma.comune.findMany({ select: { slug: true } });
-        comuni.forEach(c => links.push({ url: `/comune/${c.slug}` }));
-
-        // Punti di Interesse (POI)
-        const pois = await prisma.pointofinterest.findMany({ select: { id: true } });
-        pois.forEach(p => links.push({ url: `/poi/${p.id}` }));
-
-        // Offerte
+        // Contenuti extra
         const offers = await prisma.offer.findMany({ select: { id: true } });
-        offers.forEach(o => links.push({ url: `/offerte/${o.id}`, changefreq: 'daily', priority: 0.9 }));
+        offers.forEach(o => links.push({ url: `/offerte/${o.id}`, changefreq: 'daily' }));
 
-        // Bonus
-        const bonuses = await prisma.bonus.findMany({ select: { id: true } });
-        bonuses.forEach(b => links.push({ url: `/bonus/${b.id}` }));
-
-        // Itinerari
-        const itineraries = await prisma.itinerary.findMany({ select: { id: true } });
-        itineraries.forEach(i => links.push({ url: `/itinerari/${i.id}` }));
-
-        // Destinazioni
-        const destinations = await prisma.destination.findMany({ select: { id: true } });
-        destinations.forEach(d => links.push({ url: `/destinazioni/${d.id}` }));
-
-        // Notizie
-        const news = await prisma.news.findMany({ select: { id: true } });
-        news.forEach(n => links.push({ url: `/notizie/${n.id}`, priority: 1.0, changefreq: 'daily' }));
-
-        // Guide (Pratiche Utili)
         const guides = await prisma.Guide.findMany({ select: { slug: true } });
         guides.forEach(g => links.push({ url: `/pratiche-utili/${g.slug}` }));
 
-        // Articoli (Come Fare)
-        const howToArticles = await prisma.HowToArticle.findMany({ select: { slug: true } });
-        howToArticles.forEach(a => links.push({ url: `/come-fare/${a.slug}` }));
+        const dests = await prisma.destination.findMany({ select: { id: true } });
+        dests.forEach(d => links.push({ url: `/destinazioni/${d.id}` }));
 
-        // Pagine Categoria (Pratiche Utili e Come Fare)
-        const guideCategories = await prisma.Category.findMany({ select: { slug: true } });
-        guideCategories.forEach(cat => links.push({ url: `/pratiche-utili/category/${cat.slug}` }));
+        res.header('Content-Type', 'application/xml');
+        res.send(await generateXML(links));
+    } catch (error) { res.status(500).send('Error'); }
+};
 
-        const howToCategories = await prisma.HowToCategory.findMany({ select: { slug: true } });
-        howToCategories.forEach(cat => links.push({ url: `/come-fare/category/${cat.slug}` }));
+// --- 3. MAPPA COMUNI ---
+export const getSitemapComuni = async (req, res) => {
+    try {
+        const links = [];
+        const comuni = await prisma.comune.findMany({ select: { slug: true } });
+        comuni.forEach(c => links.push({ url: `/comune/${c.slug}`, changefreq: 'weekly' }));
 
+        res.header('Content-Type', 'application/xml');
+        res.send(await generateXML(links));
+    } catch (error) { res.status(500).send('Error'); }
+};
 
-        // --- Creazione dello stream XML ---
-        const stream = new SitemapStream({ hostname: BASE_URL });
-        res.writeHead(200, { 'Content-Type': 'application/xml' });
+// --- 4. MAPPA POI (Paginata per non superare il limite) ---
+export const getSitemapPois = async (req, res) => {
+    try {
+        const page = parseInt(req.params.page) || 1;
+        const limit = 30000;
+        const skip = (page - 1) * limit;
 
-        const xml = await streamToPromise(Readable.from(links).pipe(stream)).then((data) =>
-            data.toString()
-        );
+        const links = [];
+        const pois = await prisma.pointofinterest.findMany({
+            select: { id: true },
+            skip: skip,
+            take: limit
+        });
 
-        res.end(xml);
+        pois.forEach(p => links.push({ url: `/poi/${p.id}`, changefreq: 'monthly' }));
 
-    } catch (error) {
-        console.error("Errore durante la generazione della sitemap:", error);
-        res.status(500).send('Internal Server Error');
-    }
+        res.header('Content-Type', 'application/xml');
+        res.send(await generateXML(links));
+    } catch (error) { res.status(500).send('Error'); }
 };
