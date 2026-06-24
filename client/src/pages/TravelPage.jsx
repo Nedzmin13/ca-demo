@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Map, MapPin, Eye, Route as RouteIcon, Star } from 'lucide-react'; // Aggiunto Star
-import {fetchDestinationsBySeason, fetchTopDestinationsTravel} from '../api';
+import { Map, Star } from 'lucide-react'; // Rimossa l'icona Route
+import { fetchDestinationsBySeason, fetchTopDestinationsTravel } from '../api';
 
 const TravelCard = ({ title, description, icon, link, colorClass }) => (
-    <Link to={link} className={`bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-t-4 ${colorClass} group flex flex-col items-center text-center`}>
+    <Link to={link} className={`bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-t-4 ${colorClass} group flex flex-col items-center text-center h-full`}>
         <div className={`p-4 rounded-full mb-6 ${colorClass.replace('border-', 'bg-').replace('500', '100')} ${colorClass.replace('border-', 'text-')}`}>
             {React.cloneElement(icon, { size: 32 })}
         </div>
@@ -21,7 +21,6 @@ function TravelPage() {
     useEffect(() => {
         const loadPopular = async () => {
             try {
-                // USA LA NUOVA CHIAMATA API
                 const res = await fetchTopDestinationsTravel();
                 setPopularDestinations(res.data?.slice(0, 3) || []);
             } catch (error) {
@@ -37,7 +36,7 @@ function TravelPage() {
         <>
             <Helmet>
                 <title>Viaggio in Italia - Regioni, Comuni e Destinazioni | ComuniAmo</title>
-                <meta name="description" content="Esplora l'Italia con InfoSubito. Trova informazioni turistiche, elenchi di comuni e le migliori destinazioni per le tue vacanze." />
+                <meta name="description" content="Esplora l'Italia con ComuniAmo. Trova informazioni turistiche, elenchi di comuni e le migliori destinazioni per le tue vacanze." />
             </Helmet>
 
             <div className="bg-gray-50 min-h-screen py-16">
@@ -52,30 +51,28 @@ function TravelPage() {
                         </p>
                     </div>
 
-                    {/* MODIFICA: Ora ci sono solo 3 card principali */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                        <TravelCard
-                            title="Esplora per Regione"
-                            description="Naviga tra tutte le regioni e province italiane."
-                            icon={<Map />}
-                            link="/viaggio/regioni"
-                            colorClass="border-sky-500"
-                        />
-                        <TravelCard
-                            title="Top Destinazioni"
-                            description="Le mete turistiche più consigliate del momento."
-                            icon={<Star />}
-                            link="/top-destinazioni"
-                            colorClass="border-amber-500"
-                        />
-                        <TravelCard
-                            title="Itinerari"
-                            description="Percorsi e viaggi organizzati passo dopo passo."
-                            icon={<RouteIcon />}
-                            link="/itinerari"
-                            colorClass="border-emerald-500"
-                        />
+                    {/* ▼▼▼ MODIFICA DESIGN: Flexbox centrato con larghezza 1/3 ▼▼▼ */}
+                    <div className="flex flex-col md:flex-row justify-center gap-8 mb-20">
+                        <div className="w-full md:w-1/3">
+                            <TravelCard
+                                title="Esplora per Regione"
+                                description="Naviga tra tutte le regioni e province italiane."
+                                icon={<Map />}
+                                link="/viaggio/regioni"
+                                colorClass="border-sky-500"
+                            />
+                        </div>
+                        <div className="w-full md:w-1/3">
+                            <TravelCard
+                                title="Top Destinazioni"
+                                description="Le mete turistiche più consigliate del momento."
+                                icon={<Star />}
+                                link="/top-destinazioni"
+                                colorClass="border-amber-500"
+                            />
+                        </div>
                     </div>
+                    {/* ▲▲▲ FINE MODIFICA DESIGN ▲▲▲ */}
 
                     {/* Sezione Destinazioni Popolari */}
                     <div className="mb-16 text-center">

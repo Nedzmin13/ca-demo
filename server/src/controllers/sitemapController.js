@@ -16,7 +16,6 @@ export const getSitemapIndex = async (req, res) => {
         const poiCount = await prisma.pointofinterest.count();
         const poisPerFile = 30000;
 
-        // ▼▼▼ ECCO L'ERRORE CHE HO CORRETTO QUI SOTTO ▼▼▼
         const totalPoiPages = Math.ceil(poiCount / poisPerFile);
 
         let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
@@ -40,13 +39,17 @@ export const getSitemapIndex = async (req, res) => {
     }
 };
 
-// --- 2. MAPPA MAIN (Pagine statiche, Destinazioni, Guide, Offerte) ---
+// --- 2. MAPPA MAIN (Pagine statiche, Destinazioni, Guide, Offerte, Bonus, Come Fare) ---
 export const getSitemapMain = async (req, res) => {
     try {
         const links = [];
 
-        // Pagine base
-        const staticPages = ['/', '/viaggio', '/affari-sconti', '/bonus', '/top-destinazioni', '/pratiche-utili', '/come-fare', '/notizie-utili', '/chi-siamo', '/faq'];
+        // Pagine base (Senza itinerari e senza notizie)
+        const staticPages = [
+            '/', '/viaggio', '/affari-sconti', '/bonus', '/top-destinazioni',
+            '/pratiche-utili', '/come-fare', '/notizie-utili', '/chi-siamo', '/faq',
+            '/privacy-policy', '/cookie-policy', '/termini-e-condizioni'
+        ];
         staticPages.forEach(url => links.push({ url, changefreq: 'weekly', priority: 0.8 }));
 
         // Regioni e Province
@@ -56,15 +59,33 @@ export const getSitemapMain = async (req, res) => {
         const provinces = await prisma.province.findMany({ select: { sigla: true, region: { select: { name: true } } } });
         provinces.forEach(p => links.push({ url: `/viaggio/${p.region.name.toLowerCase()}/${p.sigla.toLowerCase()}` }));
 
-        // Contenuti extra
+        // Offerte
         const offers = await prisma.offer.findMany({ select: { id: true } });
-        offers.forEach(o => links.push({ url: `/offerte/${o.id}`, changefreq: 'daily' }));
+        offers.forEach(o => links.push({ url: `/offerte/${o.id}`, changefreq: 'daily', priority: 0.9 }));
 
+        // Destinazioni
+        const dests = await prisma.destination.findMany({ select: { id: true } });
+        dests.forEach(d => links.push({ url: `/destinazioni/${d.id}` }));
+
+        // Bonus
+        const bonuses = await prisma.bonus.findMany({ select: { id: true } });
+        bonuses.forEach(b => links.push({ url: `/bonus/${b.id}` }));
+
+        // Guide (Pratiche Utili)
         const guides = await prisma.Guide.findMany({ select: { slug: true } });
         guides.forEach(g => links.push({ url: `/pratiche-utili/${g.slug}` }));
 
-        const dests = await prisma.destination.findMany({ select: { id: true } });
-        dests.forEach(d => links.push({ url: `/destinazioni/${d.id}` }));
+        // Categorie Guide
+        const guideCategories = await prisma.Category.findMany({ select: { slug: true } });
+        guideCategories.forEach(cat => links.push({ url: `/pratiche-utili/category/${cat.slug}` }));
+
+        // Articoli (Come Fare)
+        const howToArticles = await prisma.HowToArticle.findMany({ select: { slug: true } });
+        howToArticles.forEach(a => links.push({ url: `/come-fare/${a.slug}` }));
+
+        // Categorie Come Fare
+        const howToCategories = await prisma.HowToCategory.findMany({ select: { slug: true } });
+        howToCategories.forEach(cat => links.push({ url: `/come-fare/category/${cat.slug}` }));
 
         res.header('Content-Type', 'application/xml');
         res.send(await generateXML(links));

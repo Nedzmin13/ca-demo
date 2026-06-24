@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/sitemapController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/sitemapController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/TravelPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/TravelPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +107,7 @@
       <workItem from="1777223138915" duration="39284000" />
       <workItem from="1779179358748" duration="1425000" />
       <workItem from="1779472648730" duration="31062000" />
-      <workItem from="1781270385216" duration="28327000" />
+      <workItem from="1781270385216" duration="32422000" />
     </task>
     <task id="LOCAL-00001" summary="///">
       <option name="closed" value="true" />
