@@ -14,7 +14,7 @@ const generateXML = async (links) => {
 export const getSitemapIndex = async (req, res) => {
     try {
         const poiCount = await prisma.pointofinterest.count();
-        const poisPerFile = 30000;
+        const poisPerFile = 10000;
 
         const totalPoiPages = Math.ceil(poiCount / poisPerFile);
 
@@ -111,7 +111,7 @@ export const getSitemapComuni = async (req, res) => {
 export const getSitemapPois = async (req, res) => {
     try {
         const page = parseInt(req.params.page) || 1;
-        const limit = 30000;
+        const limit = 10000;
         const skip = (page - 1) * limit;
 
         const links = [];
