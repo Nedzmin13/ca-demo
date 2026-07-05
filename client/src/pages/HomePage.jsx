@@ -83,7 +83,7 @@ function HomePage() {
             <Helmet>
                 <title>ComuniAmo - Guide, Viaggi, Bonus e Notizie per l'Italia</title>
                 <meta name="description" content="Il portale N°1 in Italia per trovare informazioni utili, guide pratiche, bonus aggiornati, offerte e destinazioni di viaggio. Tutto in un unico posto." />
-                <meta property="og:title" content="InfoSubito - Guide, Viaggi, Bonus e Notizie per l'Italia" />
+                <meta property="og:title" content="ComuniAmo - Guide, Viaggi, Bonus e Notizie per l'Italia" />
                 <meta property="og:description" content="Il portale N°1 in Italia per trovare informazioni utili, guide pratiche e bonus aggiornati." />
                 <meta property="og:type" content="website" />
             </Helmet>

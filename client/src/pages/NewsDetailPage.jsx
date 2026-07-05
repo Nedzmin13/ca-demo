@@ -19,7 +19,7 @@ function NewsDetailPage() {
 
     if (!news) return <div className="text-center p-10">Caricamento...</div>;
 
-    const pageTitle = `${news.title} | Notizie Utili - InfoSubito`;
+    const pageTitle = `${news.title} | Notizie Utili - ComuniAmo`;
     const metaDescription = news.excerpt || `Leggi l'articolo completo su "${news.title}". Aggiornamenti e notizie dall'Italia su FastInfo.`;
 
     return (

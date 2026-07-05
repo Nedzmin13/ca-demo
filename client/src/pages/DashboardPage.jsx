@@ -7,7 +7,7 @@ function DashboardPage() {
     const { userInfo } = useAuthStore();
     return (
         <>
-            <Helmet><title>Dashboard - InfoSubito Admin</title></Helmet>
+            <Helmet><title>Dashboard - ComuniAmo Admin</title></Helmet>
             <div>
                 <h1 className="text-3xl font-bold text-gray-900">Benvenuto, {userInfo?.email}!</h1>
                 <p className="mt-2 text-gray-600">

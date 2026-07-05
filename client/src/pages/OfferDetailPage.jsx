@@ -26,7 +26,7 @@ function OfferDetailPage() {
     const currentPageUrl = window.location.href;
 
 
-    const pageTitle = `${offer.title} - Sconto ${offer.discount} | InfoSubito`;
+    const pageTitle = `${offer.title} - Sconto ${offer.discount} | ComuniAmo`;
     const metaDescription = `Approfitta dell'offerta su ${offer.title} da ${offer.store}. Dettagli, descrizione e link diretto per acquistare al miglior prezzo.`;
 
     return (

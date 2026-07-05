@@ -78,7 +78,7 @@ function BonusPage() {
     return (
         <>
             <Helmet>
-                <title>Tutti i Bonus e Incentivi Disponibili in Italia | InfoSubito</title>
+                <title>Tutti i Bonus e Incentivi Disponibili in Italia | ComuniAmo</title>
                 <meta name="description" content="La lista completa e aggiornata di tutti i bonus e incentivi statali: Famiglia, Casa, Lavoro, Mobilità e Fiscali. Scopri come richiederli." />
                 <meta property="og:title" content="Tutti i Bonus e Incentivi Disponibili in Italia" />
             </Helmet>

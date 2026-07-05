@@ -47,8 +47,8 @@ function FaqPage() {
     return (
         <>
             <Helmet>
-                <title>FAQ - Domande Frequenti | InfoSubito.it</title>
-                <meta name="description" content="Trova le risposte alle domande più comuni su InfoSubito: come funziona il sito, trasparenza, affiliazioni e segnalazione errori." />
+                <title>FAQ - Domande Frequenti | ComuniAmo.it</title>
+                <meta name="description" content="Trova le risposte alle domande più comuni su ComuniAmo: come funziona il sito, trasparenza, affiliazioni e segnalazione errori." />
             </Helmet>
             <div className="bg-gray-50 py-12 min-h-screen">
                 <div className="container mx-auto px-4 max-w-4xl">

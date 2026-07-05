@@ -19,22 +19,26 @@ function Footer() {
                     {/* 1. SEZIONE BRAND E SOCIAL */}
                     <div className="md:col-span-2 lg:pr-12">
                         <div className="flex items-center gap-3 mb-6">
-                            <img src={logo} alt="InfoSubito Logo" className="w-10 h-10 object-contain" />
+                            <img src={logo} alt="InfoSubito Logo" className="w-10 h-10 object-contain"/>
                             <span className="text-3xl font-extrabold text-white tracking-tight">ComuniAmo</span>
                         </div>
                         <p className="text-sm text-gray-400 mb-8 leading-relaxed max-w-md">
-                            Il portale che ti tiene aggiornato su viaggi, offerte, bonus, pratiche utili e servizi per l'Italia.
+                            Il portale che ti tiene aggiornato su viaggi, offerte, bonus, pratiche utili e servizi per
+                            l'Italia.
                         </p>
 
                         <div className="flex items-center gap-5">
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-sky-500 transition-colors">
-                                <Facebook size={22} />
+                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                               className="text-gray-400 hover:text-sky-500 transition-colors">
+                                <Facebook size={22}/>
                             </a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-500 transition-colors">
-                                <Instagram size={22} />
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                               className="text-gray-400 hover:text-pink-500 transition-colors">
+                                <Instagram size={22}/>
                             </a>
-                            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                <TikTokIcon size={22} />
+                            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer"
+                               className="text-gray-400 hover:text-white transition-colors">
+                                <TikTokIcon size={22}/>
                             </a>
                         </div>
                     </div>
@@ -43,8 +47,10 @@ function Footer() {
                     <div className="md:col-span-1 lg:pl-8">
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Link Utili</h4>
                         <ul className="space-y-3 text-sm">
-                            <li><Link to="/chi-siamo" className="hover:text-sky-400 transition-colors">Chi Siamo</Link></li>
-                            <li><a href="mailto:info@comuniamo.it" className="hover:text-sky-400 transition-colors">Contatti</a></li>
+                            <li><Link to="/chi-siamo" className="hover:text-sky-400 transition-colors">Chi Siamo</Link>
+                            </li>
+                            <li><a href="mailto:info@comuniamo.it"
+                                   className="hover:text-sky-400 transition-colors">Contatti</a></li>
                             <li><Link to="/faq" className="hover:text-sky-400 transition-colors">FAQ e Assistenza</Link></li>
                         </ul>
                     </div>

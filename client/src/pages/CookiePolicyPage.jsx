@@ -62,7 +62,7 @@ function CookiePolicyPage() {
                             Il titolare del trattamento dei dati è: <br />
                             <strong>Nedzmin Cancar</strong><br />
                             P.IVA: <strong>04581990241</strong><br /> {/* Assicurati che sia giusta! */}
-                            Email: <strong>info@infosubito.it</strong><br />
+                            Email: <strong>info@comuniamo.it</strong><br />
                         </p>
 
                         <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">Modifiche a questa Policy</h2>

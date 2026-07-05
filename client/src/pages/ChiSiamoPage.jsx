@@ -6,8 +6,8 @@ function ChiSiamoPage() {
     return (
         <>
             <Helmet>
-                <title>Chi Siamo - La Missione di InfoSubito.it</title>
-                <meta name="description" content="Scopri la storia e la missione di InfoSubito.it: il portale nato per semplificare la vita degli italiani con guide chiare, notizie utili e informazioni verificate." />
+                <title>Chi Siamo - La Missione di ComuniAmo.it</title>
+                <meta name="description" content="Scopri la storia e la missione di ComuniAmo.it: il portale nato per semplificare la vita degli italiani con guide chiare, notizie utili e informazioni verificate." />
             </Helmet>
 
             <div className="bg-white">
@@ -22,41 +22,41 @@ function ChiSiamoPage() {
                     <div className="mt-16 prose max-w-4xl mx-auto text-lg text-gray-700">
                         <h2>Chi Siamo</h2>
                         <p>
-                            <strong>InfoSubito.it</strong> nasce da un'idea semplice ma potente: creare un unico punto di riferimento per chiunque cerchi informazioni pratiche e verificate per vivere e navigare in Italia. In un mondo pieno di dati frammentati e burocrazia complessa, il nostro obiettivo è offrire risposte chiare e soluzioni a portata di click.
+                            <strong>ComuniAmo.it</strong> nasce da un'idea semplice ma potente: creare un unico punto di riferimento per chiunque cerchi informazioni pratiche e verificate per vivere, viaggiare e gestire la quotidianità in Italia. In un mondo pieno di dati frammentati e burocrazia complessa, il nostro obiettivo è offrire risposte chiare e soluzioni a portata di click.
                         </p>
                         <p>
-                            Dietro a questo progetto c'è una passione per l'informazione utile e un profondo desiderio di aiutare le persone a risparmiare tempo, evitare stress e cogliere le migliori opportunità che il nostro Paese offre.
+                            Il progetto è portato avanti da professionisti del settore digitale e appassionati del territorio italiano. Lavoriamo ogni giorno per organizzare dati, scrivere guide passo-passo e mappare i servizi essenziali da Nord a Sud, mettendo sempre l'utente al centro.
                         </p>
 
                         <h2>Cosa Facciamo</h2>
                         <p>Ogni giorno, lavoriamo per:</p>
                         <ul>
-                            <li><strong>Ricercare e Verificare</strong>: Analizziamo costantemente bonus, normative, offerte e notizie per fornirti solo contenuti accurati e aggiornati.</li>
-                            <li><strong>Semplificare</strong>: Traduciamo il "burocratese" in guide passo-passo facili da seguire, che ti accompagnano dalla A alla Z.</li>
+                            <li><strong>Ricercare e Verificare</strong>: Analizziamo costantemente normative, offerte, agevolazioni e dati locali per fornirti solo contenuti accurati e aggiornati.</li>
+                            <li><strong>Semplificare</strong>: Traduciamo il "burocratese" in guide pratiche facili da seguire, che ti accompagnano dalla A alla Z.</li>
                             <li><strong>Ispirare</strong>: Ti guidiamo alla scoperta delle bellezze d'Italia con itinerari e destinazioni pensate per ogni tipo di viaggiatore.</li>
                         </ul>
 
                         <h2>La Nostra Visione</h2>
                         <p>
-                            Sogniamo un'Italia in cui ogni cittadino, residente o visitatore possa accedere alle informazioni di cui ha bisogno in modo rapido e senza sforzo. Vogliamo essere la tua "bussola" digitale, il compagno di viaggio affidabile che ti aiuta a risolvere problemi pratici e a goderti al meglio tutto ciò che l'Italia ha da offrire.
+                            Sogniamo un'Italia in cui ogni cittadino, residente o visitatore possa accedere alle informazioni di cui ha bisogno in modo rapido e senza stress. Vogliamo essere la tua "bussola" digitale, il compagno di viaggio affidabile che ti aiuta a risolvere problemi pratici e a goderti al meglio tutto ciò che l'Italia ha da offrire.
                         </p>
                     </div>
 
                     <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                        <div className="border p-8 rounded-lg">
+                        <div className="border border-gray-100 shadow-sm p-8 rounded-xl bg-gray-50 hover:shadow-md transition">
                             <Target size={40} className="mx-auto text-sky-500 mb-4"/>
-                            <h3 className="text-2xl font-bold">Affidabilità</h3>
-                            <p className="text-gray-600 mt-2">Verifichiamo ogni informazione per darti solo contenuti sicuri e aggiornati.</p>
+                            <h3 className="text-2xl font-bold text-gray-800">Affidabilità</h3>
+                            <p className="text-gray-600 mt-2 text-sm">Verifichiamo ogni informazione per darti solo contenuti sicuri e aggiornati.</p>
                         </div>
-                        <div className="border p-8 rounded-lg">
+                        <div className="border border-gray-100 shadow-sm p-8 rounded-xl bg-gray-50 hover:shadow-md transition">
                             <Eye size={40} className="mx-auto text-sky-500 mb-4"/>
-                            <h3 className="text-2xl font-bold">Chiarezza</h3>
-                            <p className="text-gray-600 mt-2">Trasformiamo procedure complesse in guide semplici e comprensibili per tutti.</p>
+                            <h3 className="text-2xl font-bold text-gray-800">Chiarezza</h3>
+                            <p className="text-gray-600 mt-2 text-sm">Trasformiamo procedure complesse in guide semplici e comprensibili per tutti.</p>
                         </div>
-                        <div className="border p-8 rounded-lg">
+                        <div className="border border-gray-100 shadow-sm p-8 rounded-xl bg-gray-50 hover:shadow-md transition">
                             <Rocket size={40} className="mx-auto text-sky-500 mb-4"/>
-                            <h3 className="text-2xl font-bold">Immediatezza</h3>
-                            <p className="text-gray-600 mt-2">Il nostro obiettivo è darti le risposte che cerchi nel modo più veloce e diretto possibile.</p>
+                            <h3 className="text-2xl font-bold text-gray-800">Immediatezza</h3>
+                            <p className="text-gray-600 mt-2 text-sm">Il nostro obiettivo è darti le risposte che cerchi nel modo più veloce e diretto possibile.</p>
                         </div>
                     </div>
                 </div>

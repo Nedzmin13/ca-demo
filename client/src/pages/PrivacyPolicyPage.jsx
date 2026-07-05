@@ -64,7 +64,7 @@ function PrivacyPolicyPage() {
                         <p>Le immagini dei comuni d’Italia sono tratte da <strong>Wikipedia (Wikimedia Commons)</strong> e usate secondo le licenze <em>Creative Commons</em>. Le attribuzioni sono indicate nelle gallerie fotografiche sotto l'icona "Info". Altre immagini provengono da servizi liberi da royalty o sono state fornite dagli autori.</p>
 
                         <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">I Tuoi Diritti</h2>
-                        <p>In base al GDPR, hai il diritto di accedere ai tuoi dati personali, chiederne la rettifica o la cancellazione, opporti al trattamento o richiederne la portabilità. Per esercitare i tuoi diritti, puoi scrivere a <strong>info@infosubito.it</strong>.</p>
+                        <p>In base al GDPR, hai il diritto di accedere ai tuoi dati personali, chiederne la rettifica o la cancellazione, opporti al trattamento o richiederne la portabilità. Per esercitare i tuoi diritti, puoi scrivere a <strong>info@comuniamo.it</strong>.</p>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ function TermsAndConditionsPage() {
     return (
         <>
             <Helmet>
-                <title>Termini e Condizioni - InfoSubito.it</title>
+                <title>Termini e Condizioni - ComuniAmo.it</title>
             </Helmet>
             <div className="bg-white py-12">
                 <div className="container mx-auto px-4 max-w-4xl">

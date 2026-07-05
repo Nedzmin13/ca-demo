@@ -47,7 +47,7 @@ function GuideDetailPage() {
     const currentPageUrl = window.location.href;
 
 
-    const pageTitle = `${guide.title} - Guida Pratica | FastInfo`;
+    const pageTitle = `${guide.title} - Guida Pratica | ComuniAmo`;
     const metaDescription = guide.excerpt || `La guida completa su ${guide.title}. Scopri la procedura, i costi e i consigli utili per risolvere questa pratica.`;
 
     return (
