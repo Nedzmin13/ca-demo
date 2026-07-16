@@ -7,17 +7,12 @@
     <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Footer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ChiSiamoPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChiSiamoPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/CookiePolicyPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/CookiePolicyPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/DashboardPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/DashboardPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/GlobalSearchBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/GlobalSearchBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Hero.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Hero.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Navbar.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/FaqPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/FaqPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/GuideDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/GuideDetailPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/HomePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/NewsDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/NewsDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/OfferDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OfferDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/PrivacyPolicyPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/PrivacyPolicyPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/TermsAndConditionsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/TermsAndConditionsPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/sitemapController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/sitemapController.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +114,7 @@
       <workItem from="1779472648730" duration="31062000" />
       <workItem from="1781270385216" duration="32422000" />
       <workItem from="1782728038368" duration="2904000" />
+      <workItem from="1783618441026" duration="3203000" />
     </task>
     <task id="LOCAL-00001" summary="///">
       <option name="closed" value="true" />

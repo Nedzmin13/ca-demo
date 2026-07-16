@@ -19,7 +19,7 @@ function Hero() {
                     ComuniAmo
                 </h1>
                 <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md">
-                    Il portale che ti tiene aggiornato su tutto ciò che serve: viaggi, offerte, bonus e notizie utili per l'Italia.
+                    Il portale che ti aiuta a semplificare la burocrazia: guide pratiche, tutorial passo-passo e tutti i bonus aggiornati per l'Italia.
                 </p>
             </div>
         </div>

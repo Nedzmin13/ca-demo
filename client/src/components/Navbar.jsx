@@ -36,13 +36,16 @@ function Navbar() {
 
                     <div className="hidden md:flex md:items-center md:space-x-8">
                         <NavLink to="/" className={navLinkClass} end>Home</NavLink>
-                        <NavLink to="/viaggio" className={navLinkClass}>Viaggio</NavLink>
-                        <NavLink to="/affari-sconti" className={navLinkClass}>Affari & Sconti</NavLink>
-                        <NavLink to="/bonus" className={navLinkClass}>Bonus</NavLink>
-                        <NavLink to="/top-destinazioni" className={navLinkClass}>Top Destinazioni</NavLink>
+
+                        {/* ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼ */}
+                        {/* <NavLink to="/viaggio" className={navLinkClass}>Viaggio</NavLink> */}
+                        {/* <NavLink to="/affari-sconti" className={navLinkClass}>Affari & Sconti</NavLink> */}
+                        {/* <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink> */}
+                        {/* ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ */}
+
                         <NavLink to="/pratiche-utili" className={navLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={navLinkClass}>Come Fare</NavLink>
-                        <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink>
+                        <NavLink to="/bonus" className={navLinkClass}>Bonus</NavLink>
                     </div>
 
                     {/* Barra di ricerca per il PC */}
@@ -64,19 +67,22 @@ function Navbar() {
                 <div className="md:hidden border-t bg-white absolute w-full left-0 shadow-lg z-40">
                     <div className="px-4 pt-4 pb-6 space-y-4 h-screen overflow-y-auto">
 
-                        {/* ▼▼▼ BARRA DI RICERCA MOBILE CON ORDINE DI CHIUSURA ▼▼▼ */}
+                        {/* BARRA DI RICERCA MOBILE CON ORDINE DI CHIUSURA */}
                         <div className="mb-4">
                             <GlobalSearchBar onSearchComplete={() => setIsMenuOpen(false)} />
                         </div>
 
                         <NavLink to="/" className={mobileNavLinkClass}>Home</NavLink>
-                        <NavLink to="/viaggio" className={mobileNavLinkClass}>Viaggio</NavLink>
-                        <NavLink to="/affari-sconti" className={mobileNavLinkClass}>Affari & Sconti</NavLink>
-                        <NavLink to="/bonus" className={mobileNavLinkClass}>Bonus</NavLink>
-                        <NavLink to="/top-destinazioni" className={mobileNavLinkClass}>Top Destinazioni</NavLink>
+
+                        {/* ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼ */}
+                        {/* <NavLink to="/viaggio" className={mobileNavLinkClass}>Viaggio</NavLink> */}
+                        {/* <NavLink to="/affari-sconti" className={mobileNavLinkClass}>Affari & Sconti</NavLink> */}
+                        {/* <NavLink to="/notizie-utili" className={mobileNavLinkClass}>Servizi Utili</NavLink> */}
+                        {/* ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ */}
+
                         <NavLink to="/pratiche-utili" className={mobileNavLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={mobileNavLinkClass}>Come Fare</NavLink>
-                        <NavLink to="/notizie-utili" className={mobileNavLinkClass}>Servizi Utili</NavLink>
+                        <NavLink to="/bonus" className={mobileNavLinkClass}>Bonus</NavLink>
                     </div>
                 </div>
             )}

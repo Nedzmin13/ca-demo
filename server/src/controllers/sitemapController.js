@@ -13,21 +13,29 @@ const generateXML = async (links) => {
 // --- 1. L'INDICE PRINCIPALE ---
 export const getSitemapIndex = async (req, res) => {
     try {
+        // ▼▼▼ NASCOSTI I POI PER ADSENSE (Mappa più pulita per il bot) ▼▼▼
+        /*
         const poiCount = await prisma.pointofinterest.count();
         const poisPerFile = 10000;
-
         const totalPoiPages = Math.ceil(poiCount / poisPerFile);
+        */
+        // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
         let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
-        // Aggiungi mappa principale e comuni
+        // Aggiungi mappa principale
         xml += `  <sitemap>\n    <loc>${BASE_URL}/sitemap-main.xml</loc>\n  </sitemap>\n`;
+
+        // ▼▼▼ NASCOSTI I COMUNI E I POI PER ADSENSE ▼▼▼
+        /*
         xml += `  <sitemap>\n    <loc>${BASE_URL}/sitemap-comuni.xml</loc>\n  </sitemap>\n`;
 
         // Aggiungi le mappe paginate dei POI
         for (let i = 1; i <= totalPoiPages; i++) {
             xml += `  <sitemap>\n    <loc>${BASE_URL}/sitemap-pois-${i}.xml</loc>\n  </sitemap>\n`;
         }
+        */
+        // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
         xml += `</sitemapindex>`;
 
@@ -39,19 +47,20 @@ export const getSitemapIndex = async (req, res) => {
     }
 };
 
-// --- 2. MAPPA MAIN (Pagine statiche, Destinazioni, Guide, Offerte, Bonus, Come Fare) ---
+// --- 2. MAPPA MAIN (Solo Pagine Accettate da AdSense) ---
 export const getSitemapMain = async (req, res) => {
     try {
         const links = [];
 
-        // Pagine base (Senza itinerari e senza notizie)
+        // Pagine base (Nascoste viaggio, offerte, ecc.)
         const staticPages = [
-            '/', '/viaggio', '/affari-sconti', '/bonus', '/top-destinazioni',
-            '/pratiche-utili', '/come-fare', '/notizie-utili', '/chi-siamo', '/faq',
+            '/', '/bonus', '/pratiche-utili', '/come-fare', '/chi-siamo', '/faq',
             '/privacy-policy', '/cookie-policy', '/termini-e-condizioni'
         ];
         staticPages.forEach(url => links.push({ url, changefreq: 'weekly', priority: 0.8 }));
 
+        // ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼
+        /*
         // Regioni e Province
         const regions = await prisma.region.findMany({ select: { name: true } });
         regions.forEach(r => links.push({ url: `/viaggio/${r.name.toLowerCase()}` }));
@@ -59,13 +68,14 @@ export const getSitemapMain = async (req, res) => {
         const provinces = await prisma.province.findMany({ select: { sigla: true, region: { select: { name: true } } } });
         provinces.forEach(p => links.push({ url: `/viaggio/${p.region.name.toLowerCase()}/${p.sigla.toLowerCase()}` }));
 
-        // Offerte
+        // Offerte e Destinazioni
         const offers = await prisma.offer.findMany({ select: { id: true } });
         offers.forEach(o => links.push({ url: `/offerte/${o.id}`, changefreq: 'daily', priority: 0.9 }));
 
-        // Destinazioni
         const dests = await prisma.destination.findMany({ select: { id: true } });
         dests.forEach(d => links.push({ url: `/destinazioni/${d.id}` }));
+        */
+        // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 
         // Bonus
         const bonuses = await prisma.bonus.findMany({ select: { id: true } });
@@ -95,7 +105,7 @@ export const getSitemapMain = async (req, res) => {
     }
 };
 
-// --- 3. MAPPA COMUNI ---
+// --- 3. MAPPA COMUNI (Nascosta, ma teniamo la funzione) ---
 export const getSitemapComuni = async (req, res) => {
     try {
         const links = [];
@@ -107,7 +117,7 @@ export const getSitemapComuni = async (req, res) => {
     } catch (error) { res.status(500).send('Error'); }
 };
 
-// --- 4. MAPPA POI (Paginata per non superare il limite) ---
+// --- 4. MAPPA POI (Nascosta, ma teniamo la funzione) ---
 export const getSitemapPois = async (req, res) => {
     try {
         const page = parseInt(req.params.page) || 1;

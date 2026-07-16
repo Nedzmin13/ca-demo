@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCombobox } from 'downshift';
 import useDebounce from '../hooks/useDebounce';
 import { globalSearch } from '../api';
-import { Search, MapPin, Tag, BookOpen, Wrench } from 'lucide-react';
+import { Search, BookOpen, Wrench } from 'lucide-react'; // Rimossi MapPin e Tag per ora
 
 export function GlobalSearchBar({ onSearchComplete }) {
     const navigate = useNavigate();
@@ -21,8 +21,11 @@ export function GlobalSearchBar({ onSearchComplete }) {
             try {
                 const response = await globalSearch(debouncedInputValue);
                 const combinedResults = [
-                    ...response.data.comuni.map(item => ({ ...item, resultType: 'Comune' })),
-                    ...response.data.offers.map(item => ({ ...item, resultType: 'Offerta' })),
+                    // ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼
+                    // ...response.data.comuni.map(item => ({ ...item, resultType: 'Comune' })),
+                    // ...response.data.offers.map(item => ({ ...item, resultType: 'Offerta' })),
+                    // ▲▲▲ FINE NASCOSTI ▲▲▲
+
                     ...response.data.guides.map(item => ({ ...item, resultType: 'Pratica Utile' })),
                     ...response.data.howToArticles.map(item => ({ ...item, resultType: 'Come Fare' })),
                 ];
@@ -52,9 +55,12 @@ export function GlobalSearchBar({ onSearchComplete }) {
             if (!selectedItem) return;
 
             // Navigazione
-            if (selectedItem.resultType === 'Comune') navigate(`/comune/${selectedItem.slug}`);
-            else if (selectedItem.resultType === 'Offerta') navigate(`/offerte/${selectedItem.id}`);
-            else if (selectedItem.resultType === 'Pratica Utile') navigate(`/pratiche-utili/${selectedItem.slug}`);
+            // ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼
+            // if (selectedItem.resultType === 'Comune') navigate(`/comune/${selectedItem.slug}`);
+            // else if (selectedItem.resultType === 'Offerta') navigate(`/offerte/${selectedItem.id}`);
+            // ▲▲▲ FINE NASCOSTI ▲▲▲
+
+            if (selectedItem.resultType === 'Pratica Utile') navigate(`/pratiche-utili/${selectedItem.slug}`);
             else if (selectedItem.resultType === 'Come Fare') navigate(`/come-fare/${selectedItem.slug}`);
 
             // Svuota barra
@@ -62,7 +68,7 @@ export function GlobalSearchBar({ onSearchComplete }) {
             setItems([]);
             reset();
 
-            // ▼▼▼ FORZA LA CHIUSURA DEL MENU ▼▼▼
+            // FORZA LA CHIUSURA DEL MENU
             if (onSearchComplete) {
                 onSearchComplete();
             }
@@ -76,14 +82,18 @@ export function GlobalSearchBar({ onSearchComplete }) {
             </div>
             <input
                 {...getInputProps({ value: inputValue })}
-                placeholder="Cerca città, offerte..."
+                placeholder="Cerca guide, tutorial..." /* <-- MODIFICATO PLACEHOLDER */
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
             <ul {...getMenuProps()} className={`absolute mt-1 w-full bg-white shadow-lg rounded-md max-h-80 overflow-auto z-50 ${!isOpen && 'hidden'}`}>
                 {isOpen && items.length > 0 && items.map((item, index) => (
                     <li key={`${item.id}-${item.resultType}`} {...getItemProps({ item, index })} className="px-4 py-2 hover:bg-sky-50 cursor-pointer flex items-center gap-3 border-b">
-                        {item.resultType === 'Comune' && <MapPin size={16} className="text-gray-400" />}
-                        {item.resultType === 'Offerta' && <Tag size={16} className="text-gray-400" />}
+
+                        {/* ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼ */}
+                        {/* {item.resultType === 'Comune' && <MapPin size={16} className="text-gray-400" />} */}
+                        {/* {item.resultType === 'Offerta' && <Tag size={16} className="text-gray-400" />} */}
+                        {/* ▲▲▲ FINE NASCOSTI ▲▲▲ */}
+
                         {item.resultType === 'Pratica Utile' && <BookOpen size={16} className="text-gray-400" />}
                         {item.resultType === 'Come Fare' && <Wrench size={16} className="text-gray-400" />}
                         <div>

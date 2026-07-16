@@ -13,10 +13,9 @@ const faqData = [
         question: 'Le vostre guide sostituiscono il parere di un professionista?',
         answer: 'Assolutamente no. Le nostre guide (in particolare quelle su fisco, tasse e bonus) hanno scopo puramente divulgativo. Facciamo il massimo sforzo per mantenerle accurate e aggiornate, ma le normative cambiano frequentemente. Ti consigliamo sempre di verificare i requisiti sui siti ufficiali o di consultare un CAF/Commercialista prima di prendere decisioni definitive.'
     },
-    {
-        question: 'Posso trovare informazioni su tutti i comuni d\'Italia?',
-        answer: 'Sì, il nostro obiettivo è coprire tutti i quasi 8000 comuni italiani. Puoi navigare attraverso la sezione <a href="/viaggio" class="text-sky-600 hover:text-sky-800 underline">Viaggio</a>, partendo dalla tua regione di interesse, oppure usare la barra di ricerca in alto a destra per trovare direttamente il comune che cerchi.'
-    },
+
+
+
     {
         question: 'Le informazioni sui bonus sono aggiornate?',
         answer: 'Assolutamente. Lavoriamo costantemente per verificare le scadenze, i requisiti e le modalità di richiesta di tutti i bonus presenti sul sito. La data di ultimo aggiornamento è spesso indicata nella pagina, ma puoi fare affidamento sul fatto che le informazioni sono tra le più recenti disponibili.'
@@ -26,8 +25,8 @@ const faqData = [
         answer: 'Puoi navigare nelle due sezioni direttamente dal menu principale. Ogni sezione è divisa in macro-categorie (es. "Fisco e Tasse", "Tecnologia & Informatica") per aiutarti a trovare rapidamente l\'argomento che ti interessa. In alternativa, la barra di ricerca globale è il modo più veloce per trovare una guida specifica.'
     },
     {
-        question: 'Cosa devo fare se trovo un orario, un indirizzo o un\'informazione inesatta?',
-        answer: 'Gestiamo e aggiorniamo decine di migliaia di Punti di Interesse in tutta Italia. Se noti un\'inesattezza (ad esempio un negozio che ha cambiato orario o si è trasferito), ti chiediamo la cortesia di segnalarcelo scrivendo a <strong>info@comuniamo.it</strong>. Il nostro team verificherà e correggerà il dato il prima possibile.'
+        question: 'Cosa devo fare se trovo un\'informazione inesatta?',
+        answer: 'Gestiamo migliaia di informazioni in tutta Italia. Se noti un\'inesattezza, ti chiediamo la cortesia di segnalarcelo scrivendo a <strong>info@comuniamo.it</strong>. Il nostro team verificherà e correggerà il dato il prima possibile.'
     },
     {
         question: 'Posso suggerire un nuovo articolo o una guida?',
@@ -35,11 +34,12 @@ const faqData = [
     },
     {
         question: 'Utilizzate link di affiliazione?',
-        answer: 'Sì, in alcune sezioni come "Affari & Sconti" o in alcune guide, potremmo utilizzare link di affiliazione. Questo significa che se acquisti un prodotto o servizio tramite i nostri link, potremmo ricevere una piccola commissione senza alcun costo aggiuntivo per te. Questo ci aiuta a sostenere i costi del sito e a mantenere i contenuti gratuiti. Per maggiori dettagli, consulta i nostri <a href="/termini-e-condizioni" class="text-sky-600 hover:text-sky-800 underline">Termini e Condizioni</a>.'
+        // Ho tolto il riferimento alla pagina "Affari & Sconti"
+        answer: 'Sì, all\'interno di alcune nostre guide potremmo utilizzare link di affiliazione. Questo significa che se acquisti un prodotto o servizio tramite i nostri link, potremmo ricevere una piccola commissione senza alcun costo aggiuntivo per te. Questo ci aiuta a sostenere i costi del sito e a mantenere i contenuti gratuiti. Per maggiori dettagli, consulta i nostri <a href="/termini-e-condizioni" class="text-sky-600 hover:text-sky-800 underline">Termini e Condizioni</a>.'
     },
     {
         question: 'Come posso contattarvi per collaborazioni o affiliate marketing?',
-        answer: 'Siamo sempre aperti a nuove collaborazioni! Per proposte di affiliate marketing, partnership o altre sinergie, ti invitiamo a scriverci direttamente all\'indirizzo email <strong>info@comuniamo.it</strong>. Analizzeremo la tua proposta e ti risponderemo il prima possibile.'
+        answer: 'Siamo sempre aperti a nuove collaborazioni! Per proposte di partnership o altre sinergie, ti invitiamo a scriverci direttamente all\'indirizzo email <strong>info@comuniamo.it</strong>. Analizzeremo la tua proposta e ti risponderemo il prima possibile.'
     }
 ];
 
