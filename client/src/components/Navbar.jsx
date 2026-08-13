@@ -8,20 +8,10 @@ function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
-    // Chiude il menu quando cambi pagina
-    useEffect(() => {
-        setIsMenuOpen(false);
-    }, [location]);
+    useEffect(() => { setIsMenuOpen(false); }, [location]);
 
-    const navLinkClass = ({ isActive }) =>
-        isActive
-            ? 'text-sky-600 font-semibold py-1'
-            : 'text-gray-700 hover:text-sky-600 py-1';
-
-    const mobileNavLinkClass = ({ isActive }) =>
-        isActive
-            ? 'bg-sky-50 text-sky-600 block px-3 py-2 rounded-md text-base font-semibold'
-            : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium';
+    const navLinkClass = ({ isActive }) => isActive ? 'text-sky-600 font-semibold py-1' : 'text-gray-700 hover:text-sky-600 py-1';
+    const mobileNavLinkClass = ({ isActive }) => isActive ? 'bg-sky-50 text-sky-600 block px-3 py-2 rounded-md text-base font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium';
 
     return (
         <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -36,58 +26,38 @@ function Navbar() {
 
                     <div className="hidden md:flex md:items-center md:space-x-8">
                         <NavLink to="/" className={navLinkClass} end>Home</NavLink>
-
-                        {/* ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼ */}
-                        {/* <NavLink to="/viaggio" className={navLinkClass}>Viaggio</NavLink> */}
-                        {/* <NavLink to="/affari-sconti" className={navLinkClass}>Affari & Sconti</NavLink> */}
-                        {/* <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink> */}
-                        {/* ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ */}
-
+                        <NavLink to="/viaggio" className={navLinkClass}>Viaggio</NavLink>
+                        <NavLink to="/affari-sconti" className={navLinkClass}>Affari & Sconti</NavLink>
+                        <NavLink to="/bonus" className={navLinkClass}>Bonus</NavLink>
+                        <NavLink to="/top-destinazioni" className={navLinkClass}>Top Destinazioni</NavLink>
                         <NavLink to="/pratiche-utili" className={navLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={navLinkClass}>Come Fare</NavLink>
-                        <NavLink to="/bonus" className={navLinkClass}>Bonus</NavLink>
+                        <NavLink to="/notizie-utili" className={navLinkClass}>Servizi Utili</NavLink>
                     </div>
 
-                    {/* Barra di ricerca per il PC */}
-                    <div className="hidden sm:block w-64">
-                        <GlobalSearchBar />
-                    </div>
-
-                    {/* Tasto Hamburger per Mobile */}
+                    <div className="hidden sm:block w-64"><GlobalSearchBar /></div>
                     <div className="md:hidden flex items-center">
-                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Apri menu">
-                            {isMenuOpen ? <X size={28}/> : <Menu size={28}/>}
-                        </button>
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Apri menu">{isMenuOpen ? <X size={28}/> : <Menu size={28}/>}</button>
                     </div>
                 </div>
             </nav>
 
-            {/* MENU A TENDINA MOBILE */}
             {isMenuOpen && (
                 <div className="md:hidden border-t bg-white absolute w-full left-0 shadow-lg z-40">
                     <div className="px-4 pt-4 pb-6 space-y-4 h-screen overflow-y-auto">
-
-                        {/* BARRA DI RICERCA MOBILE CON ORDINE DI CHIUSURA */}
-                        <div className="mb-4">
-                            <GlobalSearchBar onSearchComplete={() => setIsMenuOpen(false)} />
-                        </div>
-
+                        <div className="mb-4"><GlobalSearchBar onSearchComplete={() => setIsMenuOpen(false)} /></div>
                         <NavLink to="/" className={mobileNavLinkClass}>Home</NavLink>
-
-                        {/* ▼▼▼ NASCOSTI PER ADSENSE ▼▼▼ */}
-                        {/* <NavLink to="/viaggio" className={mobileNavLinkClass}>Viaggio</NavLink> */}
-                        {/* <NavLink to="/affari-sconti" className={mobileNavLinkClass}>Affari & Sconti</NavLink> */}
-                        {/* <NavLink to="/notizie-utili" className={mobileNavLinkClass}>Servizi Utili</NavLink> */}
-                        {/* ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ */}
-
+                        <NavLink to="/viaggio" className={mobileNavLinkClass}>Viaggio</NavLink>
+                        <NavLink to="/affari-sconti" className={mobileNavLinkClass}>Affari & Sconti</NavLink>
+                        <NavLink to="/bonus" className={mobileNavLinkClass}>Bonus</NavLink>
+                        <NavLink to="/top-destinazioni" className={mobileNavLinkClass}>Top Destinazioni</NavLink>
                         <NavLink to="/pratiche-utili" className={mobileNavLinkClass}>Pratiche Utili</NavLink>
                         <NavLink to="/come-fare" className={mobileNavLinkClass}>Come Fare</NavLink>
-                        <NavLink to="/bonus" className={mobileNavLinkClass}>Bonus</NavLink>
+                        <NavLink to="/notizie-utili" className={mobileNavLinkClass}>Servizi Utili</NavLink>
                     </div>
                 </div>
             )}
         </header>
     );
 }
-
 export default Navbar;
