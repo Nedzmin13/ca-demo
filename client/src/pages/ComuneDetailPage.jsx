@@ -300,7 +300,7 @@ function ComuneDetailPage() {
 
     return (
         <>
-            <Helmet><title>{comune.name} | InfoSubito</title></Helmet>
+            <Helmet><title>{comune.name} | ComuniAmo</title></Helmet>
             <div className="bg-gray-50">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-5xl">
                     <div className="mb-8"><ImageGallery images={comune.images || []} /></div>

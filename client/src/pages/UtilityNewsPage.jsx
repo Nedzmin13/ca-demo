@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { fetchUtilityInfo } from '../api';
 import { Phone, Thermometer } from 'lucide-react'; // Rimossi Train e Droplet non usati
 import axios from 'axios';
+import WeatherMap from "../components/WeatherMap.jsx";
 
 // --- Elenco Capoluoghi di Regione Italiani ---
 const CAPOLUOGHI = [
@@ -96,22 +97,15 @@ function UtilityNewsPage() {
                             <p className="text-gray-600 mt-2">La situazione in tempo reale nei capoluoghi di regione</p>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                            {WEATHER_CITIES.map((cityQuery, index) => (
-                                <WeatherWidget
-                                    key={index}
-                                    cityQuery={cityQuery}
-                                    displayName={CAPOLUOGHI[index]?.name || cityQuery}
-                                />
-                            ))}
-                        </div>
+                        <WeatherMap/>
+
                     </div>
 
                     {/* SEZIONE NUMERI DI EMERGENZA */}
                     <div>
                         <div className="text-center mb-8">
                             <h2 className="text-3xl font-bold flex items-center justify-center gap-3">
-                                <Phone className="text-red-600" size={32} /> Numeri di Emergenza Nazionali
+                            <Phone className="text-red-600" size={32} /> Numeri di Emergenza Nazionali
                             </h2>
                         </div>
                         {loading ? <p className="text-center text-gray-500">Caricamento...</p> : utilityData.emergency?.length > 0 ? (
